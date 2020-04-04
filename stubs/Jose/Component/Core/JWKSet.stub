@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Jose\Component\Core;
+
+use ArrayIterator;
+use Countable;
+use InvalidArgumentException;
+use IteratorAggregate;
+use JsonSerializable;
+use Traversable;
+
+/**
+ * @phpstan-implements IteratorAggregate<mixed, mixed>
+ */
+class JWKSet implements Countable, IteratorAggregate, JsonSerializable
+{
+    /**
+     * @phpstan-return array{keys: array<mixed>}
+     */
+    public function jsonSerialize(): array;
+}

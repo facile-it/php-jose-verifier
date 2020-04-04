@@ -1,0 +1,12 @@
+parameters:
+    level: max
+    fileExtensions:
+        - php
+    inferPrivatePropertyTypeFromConstructor: true
+    excludes_analyse:
+        - %currentWorkingDirectory%/.phpstorm.meta.php
+        - %currentWorkingDirectory%/vendor/*
+    paths:
+        - %currentWorkingDirectory%/src
+    stubFiles:
+          - stubs/Jose/Component/Core/JWKSet.stub
