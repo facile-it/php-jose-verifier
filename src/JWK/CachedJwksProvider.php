@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
+use function is_array;
 use function json_decode;
 use function json_encode;
-use const JSON_THROW_ON_ERROR;
 use Psr\SimpleCache\CacheInterface;
 
 class CachedJwksProvider implements JwksProviderInterface
@@ -37,10 +37,12 @@ class CachedJwksProvider implements JwksProviderInterface
     public function getJwks(): array
     {
         if (is_string($data = $this->cache->get($this->cacheKey))) {
-            /** @var array{keys: array<int, array<string, mixed>>} $jwks */
-            $jwks = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+            /** @var null|array{keys: array<int, array<string, mixed>>} $jwks */
+            $jwks = json_decode($data, true);
 
-            return $jwks;
+            if (is_array($jwks)) {
+                return $jwks;
+            }
         }
 
         $jwks = $this->provider->getJwks();
