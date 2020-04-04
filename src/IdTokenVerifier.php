@@ -25,6 +25,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
     /**
      * @param string|null $accessToken
+     *
      * @return $this
      */
     public function withAccessToken(?string $accessToken): self
@@ -37,6 +38,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
     /**
      * @param string|null $code
+     *
      * @return $this
      */
     public function withCode(?string $code): self
@@ -49,6 +51,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
     /**
      * @param string|null $state
+     *
      * @return $this
      */
     public function withState(?string $state): self
