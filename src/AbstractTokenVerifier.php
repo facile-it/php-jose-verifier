@@ -113,7 +113,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     /**
      * @return static
      */
-    public function withMaxAge(?int $maxAge): TokenVerifierInterface
+    public function withMaxAge(?int $maxAge): self
     {
         $new = clone $this;
         $new->maxAge = $maxAge;

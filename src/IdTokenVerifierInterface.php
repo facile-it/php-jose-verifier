@@ -6,9 +6,21 @@ namespace Facile\JoseVerifier;
 
 interface IdTokenVerifierInterface extends TokenVerifierInterface
 {
-    public function withAccessToken(?string $accessToken): self;
+    /**
+     * @param string|null $accessToken
+     * @return $this
+     */
+    public function withAccessToken(?string $accessToken);
 
-    public function withCode(?string $code): self;
+    /**
+     * @param string|null $code
+     * @return $this
+     */
+    public function withCode(?string $code);
 
-    public function withState(?string $state): self;
+    /**
+     * @param string|null $state
+     * @return $this
+     */
+    public function withState(?string $state);
 }

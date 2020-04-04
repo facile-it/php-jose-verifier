@@ -6,7 +6,17 @@ namespace Facile\JoseVerifier;
 
 interface TokenVerifierInterface
 {
-    public function withMaxAge(?int $maxAge): self;
+    /**
+     * @param string|null $nonce
+     * @return $this
+     */
+    public function withNonce(?string $nonce);
+
+    /**
+     * @param int|null $maxAge
+     * @return $this
+     */
+    public function withMaxAge(?int $maxAge);
 
     /**
      * Verify OpenID id_token

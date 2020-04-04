@@ -23,7 +23,11 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
     /** @var string|null */
     protected $state;
 
-    public function withAccessToken(?string $accessToken): IdTokenVerifierInterface
+    /**
+     * @param string|null $accessToken
+     * @return $this
+     */
+    public function withAccessToken(?string $accessToken): self
     {
         $new = clone $this;
         $new->accessToken = $accessToken;
@@ -31,7 +35,11 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
         return $new;
     }
 
-    public function withCode(?string $code): IdTokenVerifierInterface
+    /**
+     * @param string|null $code
+     * @return $this
+     */
+    public function withCode(?string $code): self
     {
         $new = clone $this;
         $new->code = $code;
@@ -39,7 +47,11 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
         return $new;
     }
 
-    public function withState(?string $state): IdTokenVerifierInterface
+    /**
+     * @param string|null $state
+     * @return $this
+     */
+    public function withState(?string $state): self
     {
         $new = clone $this;
         $new->state = $state;
