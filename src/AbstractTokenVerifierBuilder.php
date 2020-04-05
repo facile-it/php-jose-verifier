@@ -14,7 +14,7 @@ use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 /**
  * @phpstan-template TVerifier of AbstractTokenVerifier
  */
-abstract class AbstractTokenVerifierBuilder
+abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInterface
 {
     /** @var array<string, mixed> */
     protected $clientMetadata = [];
