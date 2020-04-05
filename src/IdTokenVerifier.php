@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use function array_key_exists;
 use Facile\JoseVerifier\ClaimChecker\AtHashChecker;
 use Facile\JoseVerifier\ClaimChecker\CHashChecker;
 use Facile\JoseVerifier\ClaimChecker\SHashChecker;
-use Facile\JoseVerifier\Exception\RuntimeException;
 use Jose\Easy\Validate;
 use Throwable;
 
@@ -66,7 +64,6 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
     {
         $jwt = $this->decrypt($jwt);
         $validator = $this->create($jwt);
-        $payload = $this->getPayload($jwt);
 
         $requiredClaims = ['iss', 'sub', 'aud', 'exp', 'iat'];
 
@@ -80,11 +77,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
             $validator = $validator->claim('s_hash', new CHashChecker($this->code, $header['alg'] ?? ''));
         }
 
-        if (array_key_exists('s_hash', $payload)) {
-            if (null === $this->state) {
-                throw new RuntimeException('Cannot verify s_hash, "state" not provided');
-            }
-
+        if (null !== $this->state) {
             $validator = $validator->claim('s_hash', new SHashChecker($this->state, $header['alg'] ?? ''));
         }
 
