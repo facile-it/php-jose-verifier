@@ -7,7 +7,7 @@ namespace Facile\JoseVerifier;
 use Jose\Easy\Validate;
 use Throwable;
 
-final class AccessTokenVerifier extends AbstractTokenVerifier
+final class JWTVerifier extends AbstractTokenVerifier
 {
     public function verify(string $jwt): array
     {

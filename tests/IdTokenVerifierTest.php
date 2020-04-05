@@ -300,38 +300,6 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         self::assertSame($payload, $result);
     }
 
-    public function testShouldFailWithStateHashButWithoutState(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Cannot verify s_hash, "state" not provided');
-
-        $state = Base64Url::encode(random_bytes(32));
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
-        $payload = [
-            'iss' => 'https://issuer.com',
-            'sub' => 'client-id',
-            'aud' => 'client-id',
-            'exp' => time() + 600,
-            'iat' => time(),
-            'auth_time' => time() - 100,
-            's_hash' => $this->generateHash($state),
-        ];
-        $token = $this->createSignedToken($payload, [
-            'alg' => 'RS256',
-        ], $jwk);
-
-        $jwks = ['keys' => [$jwk->toPublic()->all()]];
-
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
-            ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
-            ->verify($token);
-
-        self::assertSame($payload, $result);
-    }
-
     public function verifyIdTokenProvider(): array
     {
         return [

@@ -6,24 +6,24 @@ namespace Facile\JoseVerifierTest;
 
 use Base64Url\Base64Url;
 use Facile\JoseVerifier\AbstractTokenVerifier;
-use Facile\JoseVerifier\AccessTokenVerifier;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
+use Facile\JoseVerifier\JWTVerifier;
 use Jose\Component\KeyManagement\JWKFactory;
 use function time;
 
-class AccessTokenVerifierTest extends AbstractTokenVerifierTestCase
+class JWTVerifierTest extends AbstractTokenVerifierTestCase
 {
     /**
      * @param TokenDecrypterInterface|null $decrypter
      *
-     * @return AccessTokenVerifier
+     * @return JWTVerifier
      */
     protected function buildVerifier(TokenDecrypterInterface $decrypter = null): AbstractTokenVerifier
     {
-        return new AccessTokenVerifier('https://issuer.com', 'client-id', $decrypter);
+        return new JWTVerifier('https://issuer.com', 'client-id', $decrypter);
     }
 
     public function testShouldValidateToken(): void
