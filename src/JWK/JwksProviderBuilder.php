@@ -37,36 +37,51 @@ class JwksProviderBuilder
 
     /**
      * @param array $jwks
+     *
+     * @return self
+     *
      * @phpstan-param array{keys: array<int, array<string, mixed>>} $jwks
      */
-    public function setJwks(array $jwks): void
+    public function setJwks(array $jwks): self
     {
         $this->jwks = $jwks;
+
+        return $this;
     }
 
-    public function setJwksUri(?string $jwksUri): void
+    public function setJwksUri(?string $jwksUri): self
     {
         $this->jwksUri = $jwksUri;
+
+        return $this;
     }
 
-    public function setHttpClient(?ClientInterface $httpClient): void
+    public function setHttpClient(?ClientInterface $httpClient): self
     {
         $this->httpClient = $httpClient;
+
+        return $this;
     }
 
-    public function setRequestFactory(?RequestFactoryInterface $requestFactory): void
+    public function setRequestFactory(?RequestFactoryInterface $requestFactory): self
     {
         $this->requestFactory = $requestFactory;
+
+        return $this;
     }
 
-    public function setCache(?CacheInterface $cache): void
+    public function setCache(?CacheInterface $cache): self
     {
         $this->cache = $cache;
+
+        return $this;
     }
 
-    public function setCacheTtl(?int $cacheTtl): void
+    public function setCacheTtl(?int $cacheTtl): self
     {
         $this->cacheTtl = $cacheTtl;
+
+        return $this;
     }
 
     protected function buildRequestFactory(): RequestFactoryInterface
