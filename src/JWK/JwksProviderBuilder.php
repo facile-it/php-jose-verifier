@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
-use Base64Url\Base64Url;
 use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
+use function substr;
 
 class JwksProviderBuilder
 {
@@ -114,7 +114,7 @@ class JwksProviderBuilder
             $provider = new CachedJwksProvider(
                 $provider,
                 $this->cache,
-                Base64Url::encode($this->jwksUri),
+                substr(sha1(__CLASS__ . $this->jwksUri), 0, 65),
                 $this->cacheTtl
             );
         }
