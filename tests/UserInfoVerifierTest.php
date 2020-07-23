@@ -78,46 +78,34 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
     public function verifyTokenProvider(): array
     {
         return [
-            [
+            'valid sub' => [
                 [
                     'sub' => 'client-id',
                 ],
                 true,
             ],
-            // wrong issuer
-            [
+            'wrong iss' => [
                 [
                     'iss' => 'https://issuer.com-wrong',
                     'sub' => 'client-id',
                 ],
                 false,
             ],
-            // wrong aud
-            [
+            'wrong aud' => [
                 [
                     'sub' => 'client-id',
                     'aud' => 'wrong-client-id',
                 ],
                 false,
             ],
-            // wrong exp
-            [
+            'wrong exp' => [
                 [
                     'sub' => 'client-id',
                     'exp' => time() - 1,
                 ],
                 false,
             ],
-            // wrong azp
-            [
-                [
-                    'sub' => 'client-id',
-                    'azp' => 'foo',
-                ],
-                false,
-            ],
-            // missing sub
-            [
+            'missing sub' => [
                 [
                 ],
                 false,
@@ -146,16 +134,44 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
             'alg' => 'HS256',
         ], $jwk);
 
-        $result = $this->buildVerifier()
+        $verifier = $this->buildVerifier()
+            ->withJwksProvider(new MemoryJwksProvider())
+            ->withAuthTimeRequired(true)
+            ->withNonce('nonce')
+            ->withClientSecret($clientSecret)
+            ->withExpectedAlg('HS256');
+
+        $result = $verifier->verify($token);
+
+        self::assertSame($payload, $result);
+
+        self::assertSame($payload, $result);
+    }
+
+    public function testWithWrongAzp(): void
+    {
+        $this->expectException(InvalidTokenException::class);
+
+        $payload = [
+            'sub' => 'sub-id',
+            'azp' => 'foo',
+        ];
+
+        $clientSecret = Base64Url::encode(\random_bytes(32));
+        $jwk = jose_secret_key($clientSecret);
+
+        $token = $this->createSignedToken($payload, [
+            'alg' => 'HS256',
+        ], $jwk);
+
+        $verifier = $this->buildVerifier()
             ->withJwksProvider(new MemoryJwksProvider())
             ->withAuthTimeRequired(true)
             ->withNonce('nonce')
             ->withClientSecret($clientSecret)
             ->withExpectedAlg('HS256')
-            ->verify($token);
+            ->withAzp('client-id');
 
-        self::assertSame($payload, $result);
-
-        self::assertSame($payload, $result);
+        $verifier->verify($token);
     }
 }

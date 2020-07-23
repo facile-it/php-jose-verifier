@@ -60,6 +60,9 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
         return $new;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function verify(string $jwt): array
     {
         $jwt = $this->decrypt($jwt);

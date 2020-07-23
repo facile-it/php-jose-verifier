@@ -37,6 +37,9 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     /** @var string|null */
     protected $clientSecret;
 
+    /** @var string|null */
+    protected $azp;
+
     /** @var null|string */
     protected $expectedAlg;
 
@@ -84,6 +87,17 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     {
         $new = clone $this;
         $new->clientSecret = $clientSecret;
+
+        return $new;
+    }
+
+    /**
+     * @return static
+     */
+    public function withAzp(?string $azp): self
+    {
+        $new = clone $this;
+        $new->azp = $azp;
 
         return $new;
     }
@@ -180,8 +194,11 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             ->iat($this->clockTolerance)
             ->aud($this->clientId)
             ->exp($this->clockTolerance)
-            ->nbf($this->clockTolerance)
-            ->claim('azp', new AzpChecker($this->clientId));
+            ->nbf($this->clockTolerance);
+
+        if (null !== $this->azp) {
+            $validator = $validator->claim('azp', new AzpChecker($this->azp));
+        }
 
         if (null !== $this->expectedAlg) {
             $validator = $validator->alg($this->expectedAlg);

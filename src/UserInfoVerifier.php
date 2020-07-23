@@ -9,6 +9,9 @@ use Throwable;
 
 final class UserInfoVerifier extends AbstractTokenVerifier
 {
+    /**
+     * @inheritDoc
+     */
     public function verify(string $jwt): array
     {
         $jwt = $this->decrypt($jwt);

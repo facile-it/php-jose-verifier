@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
+use Facile\JoseVerifier\Exception\InvalidTokenException;
+
 interface TokenVerifierInterface
 {
     /**
@@ -24,6 +26,8 @@ interface TokenVerifierInterface
      * Verify OpenID id_token
      *
      * @param string $jwt
+     *
+     * @throws InvalidTokenException
      *
      * @return array The JWT Payload
      * @phpstan-return array<string, mixed>
