@@ -32,7 +32,7 @@ If you use encryption, you should inject your JWK Set in the configuration `jwks
 
 ```php
 // Client Metadata (complete configuration example)
-$issuerMetadata = [
+$clientMetadata = [
     'client_id' => 'my-client-id',
     'client_secret' => 'my-client-secret',
     'id_token_signed_response_alg' => 'RS256',
