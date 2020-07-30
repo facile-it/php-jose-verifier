@@ -6,6 +6,9 @@ namespace Facile\JoseVerifier;
 
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 
+/**
+ * @phpstan-template TVerifier of TokenVerifierInterface
+ */
 interface TokenVerifierBuilderInterface
 {
     /**
@@ -25,4 +28,10 @@ interface TokenVerifierBuilderInterface
     public function setJwksProvider(?JwksProviderInterface $jwksProvider): void;
 
     public function setClientJwksProvider(?JwksProviderInterface $clientJwksProvider): void;
+
+    /**
+     * @return TokenVerifierInterface
+     * @phpstan-return TVerifier
+     */
+    public function build(): TokenVerifierInterface;
 }

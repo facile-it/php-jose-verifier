@@ -13,6 +13,7 @@ use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 
 /**
  * @phpstan-template TVerifier of AbstractTokenVerifier
+ * @phpstan-implements TokenVerifierBuilderInterface<TVerifier>
  */
 abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInterface
 {
