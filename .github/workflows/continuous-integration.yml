@@ -13,7 +13,7 @@ on:
     - cron: "42 9 * * 1"
 
 jobs:
-  phpstan:
+  psalm:
     name: "Static Analysis"
     runs-on: "ubuntu-20.04"
 
@@ -43,8 +43,8 @@ jobs:
       - name: "Install dependencies with composer"
         run: "composer install --no-interaction --no-progress --no-suggest --prefer-dist"
 
-      - name: "Run PHPStan"
-        run: "vendor/bin/phpstan"
+      - name: "Run psalm"
+        run: "vendor/bin/psalm"
 
   phpunit:
     name: "PHPUnit"
