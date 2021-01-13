@@ -2,6 +2,14 @@
 
 A library to validate JWT tokens.
 
+[![Build Status](https://travis-ci.org/facile-it/php-jose-verifier.svg?branch=master)](https://travis-ci.org/facile-it/php-jose-verifier)
+[![Code Coverage](https://scrutinizer-ci.com/g/facile-it/php-jose-verifier/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/facile-it/php-jose-verifier/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/facile-it/php-jose-verifier/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/facile-it/php-jose-verifier/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/facile-it/php-jose-verifier/v/stable)](https://packagist.org/packages/facile-it/php-jose-verifier)
+[![Total Downloads](https://poser.pugx.org/facile-it/php-jose-verifier/downloads)](https://packagist.org/packages/facile-it/php-jose-verifier)
+[![Latest Unstable Version](https://poser.pugx.org/facile-it/php-jose-verifier/v/unstable)](https://packagist.org/packages/facile-it/php-jose-verifier)
+[![License](https://poser.pugx.org/facile-it/php-jose-verifier/license)](https://packagist.org/packages/facile-it/php-jose-verifier)
+
 ## How To Use
 
 The suggested and simply way to use it (specially for OAuth2 and OpenID tokens) is using builders.
