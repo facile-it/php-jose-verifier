@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03357d3a9bf97dc024aec711526cd59a",
+    "content-hash": "e2d42477a73194d4d875b27dce09880e",
     "packages": [
         {
             "name": "brick/math",
@@ -6300,16 +6300,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "dev-master",
+            "version": "4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "1afce4d613b6d7f0856a54eb3441947759e96bae"
+                "reference": "57b53ff26237074fdf5cbcb034f7da5172be4524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/1afce4d613b6d7f0856a54eb3441947759e96bae",
-                "reference": "1afce4d613b6d7f0856a54eb3441947759e96bae",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/57b53ff26237074fdf5cbcb034f7da5172be4524",
+                "reference": "57b53ff26237074fdf5cbcb034f7da5172be4524",
                 "shasum": ""
             },
             "require": {
@@ -6356,7 +6356,6 @@
             "suggest": {
                 "ext-igbinary": "^2.0.5"
             },
-            "default-branch": true,
             "bin": [
                 "psalm",
                 "psalm-language-server",
@@ -6399,9 +6398,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/master"
+                "source": "https://github.com/vimeo/psalm/tree/4.3.2"
             },
-            "time": "2021-01-12T17:07:36+00:00"
+            "time": "2020-12-29T17:37:09+00:00"
         },
         {
             "name": "web-token/jwt-encryption-algorithm-aescbc",
@@ -7556,9 +7555,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "vimeo/psalm": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
