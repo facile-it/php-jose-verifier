@@ -6,7 +6,7 @@ A library to validate JWT tokens.
 
 The suggested and simply way to use it (specially for OAuth2 and OpenID tokens) is using builders.
 
-Be aware that some features can require `ext-bcmath` or `ext-gmp`.
+For better performance you should install `ext-gmp`.
 
 ## Create verifiers from Issuer and Client Metadata
 
