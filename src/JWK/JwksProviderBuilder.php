@@ -12,11 +12,14 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
 use function substr;
 
+/**
+ * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ */
 class JwksProviderBuilder
 {
     /**
      * @var array|null
-     * @phpstan-var null|array{keys: array<int, array<string, mixed>>}
+     * @psalm-var null|JWKSetObject
      */
     private $jwks;
 
@@ -40,7 +43,7 @@ class JwksProviderBuilder
      *
      * @return self
      *
-     * @phpstan-param array{keys: array<int, array<string, mixed>>} $jwks
+     * @psalm-param JWKSetObject $jwks
      */
     public function setJwks(array $jwks): self
     {
@@ -101,7 +104,10 @@ class JwksProviderBuilder
         }
 
         if (null === $this->jwksUri) {
-            return new MemoryJwksProvider($this->jwks ?? ['keys' => []]);
+            /** @var JWKSetObject $jwks */
+            $jwks = $this->jwks ?? ['keys' => []];
+
+            return new MemoryJwksProvider($jwks);
         }
 
         $provider = new RemoteJwksProvider(

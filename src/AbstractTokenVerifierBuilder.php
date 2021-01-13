@@ -12,16 +12,25 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 
 /**
- * @phpstan-template TVerifier of AbstractTokenVerifier
- * @phpstan-implements TokenVerifierBuilderInterface<TVerifier>
+ * @psalm-import-type ClientMetadataObject from Psalm\PsalmTypes
+ * @psalm-import-type IssuerMetadataObject from Psalm\PsalmTypes
+ * @psalm-import-type JWKSetObject from Psalm\PsalmTypes
+ * @template TVerifier of AbstractTokenVerifier
+ * @template-implements TokenVerifierBuilderInterface<TVerifier>
  */
 abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInterface
 {
-    /** @var array<string, mixed> */
-    protected $clientMetadata = [];
+    /**
+     * @var null|array<string, mixed>
+     * @psalm-var null|ClientMetadataObject
+     */
+    protected $clientMetadata = null;
 
-    /** @var array<string, mixed> */
-    protected $issuerMetadata = [];
+    /**
+     * @var null|array<string, mixed>
+     * @psalm-var null|IssuerMetadataObject
+     */
+    protected $issuerMetadata = null;
 
     /** @var int */
     protected $clockTolerance = 0;
@@ -40,6 +49,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
 
     /**
      * @param array<string, mixed> $clientMetadata
+     * @psalm-param ClientMetadataObject $clientMetadata
      */
     public function setClientMetadata(array $clientMetadata): void
     {
@@ -48,6 +58,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
 
     /**
      * @param array<string, mixed> $issuerMetadata
+     * @psalm-param IssuerMetadataObject $issuerMetadata
      */
     public function setIssuerMetadata(array $issuerMetadata): void
     {
@@ -80,11 +91,10 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
             return $this->jwksProvider;
         }
 
-        /** @var string|null $jwksUri */
-        $jwksUri = $this->issuerMetadata['jwks_uri'] ?? null;
+        $jwksUri = $this->getIssuerMetadata()['jwks_uri'] ?? null;
 
         $jwksBuilder = $this->jwksProviderBuilder ?? new JwksProviderBuilder();
-        $jwksBuilder->setJwksUri($jwksUri);
+        $jwksBuilder->setJwksUri($jwksUri ?: null);
 
         return $jwksBuilder->build();
     }
@@ -95,10 +105,15 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
             return $this->clientJwksProvider;
         }
 
-        /** @var array{keys: array<int, array<string, mixed>>} $jwks */
-        $jwks = $this->clientMetadata['jwks'] ?? null;
+        /** @var JWKSetObject $jwks */
+        $jwks = ['keys' => []];
 
-        return new MemoryJwksProvider($jwks ?? ['keys' => []]);
+        if ($this->clientMetadata) {
+            /** @var JWKSetObject $jwks */
+            $jwks = $this->clientMetadata['jwks'] ?? $jwks;
+        }
+
+        return new MemoryJwksProvider($jwks);
     }
 
     public function setJwksProviderBuilder(?JwksProviderBuilder $jwksProviderBuilder): void
@@ -111,7 +126,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
      * @param string $clientId
      *
      * @return AbstractTokenVerifier
-     * @phpstan-return TVerifier
+     * @psalm-return TVerifier
      */
     abstract protected function getVerifier(string $issuer, string $clientId): AbstractTokenVerifier;
 
@@ -122,28 +137,52 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     abstract protected function getExpectedEnc(): ?string;
 
     /**
+     * @return array<string, mixed>
+     * @psalm-return ClientMetadataObject
+     */
+    protected function getClientMetadata(): array
+    {
+        if (! $this->clientMetadata) {
+            throw new InvalidArgumentException('No client metadata provided');
+        }
+
+        return $this->clientMetadata;
+    }
+
+    /**
+     * @return array<string, mixed>
+     * @psalm-return IssuerMetadataObject
+     */
+    protected function getIssuerMetadata(): array
+    {
+        if (! $this->issuerMetadata) {
+            throw new InvalidArgumentException('No issuer metadata provided');
+        }
+
+        return $this->issuerMetadata;
+    }
+
+    /**
      * @return TokenVerifierInterface
-     * @phpstan-return TVerifier
+     * @psalm-return TVerifier
      */
     public function build(): TokenVerifierInterface
     {
-        /** @var string|null $issuer */
-        $issuer = $this->issuerMetadata['issuer'] ?? null;
-        /** @var string|null $clientId */
-        $clientId = $this->clientMetadata['client_id'] ?? null;
+        $issuer = $this->getIssuerMetadata()['issuer'] ?? null;
+        $clientId = $this->getClientMetadata()['client_id'] ?? null;
 
-        if (null === $issuer) {
-            throw new InvalidArgumentException('Unable to get issuer from issuer metadata');
+        if (empty($issuer)) {
+            throw new InvalidArgumentException('Invalid "issuer" from issuer metadata');
         }
 
-        if (null === $clientId) {
-            throw new InvalidArgumentException('Unable to get client_id from client metadata');
+        if (empty($clientId)) {
+            throw new InvalidArgumentException('Invalid "client_id" from client metadata');
         }
 
         $verifier = $this->getVerifier($issuer, $clientId)
             ->withJwksProvider($this->buildJwksProvider())
-            ->withClientSecret($this->clientMetadata['client_secret'] ?? null)
-            ->withAuthTimeRequired($this->clientMetadata['require_auth_time'] ?? false)
+            ->withClientSecret($this->getClientMetadata()['client_secret'] ?? null)
+            ->withAuthTimeRequired($this->getClientMetadata()['require_auth_time'] ?? false)
             ->withClockTolerance($this->clockTolerance)
             ->withAadIssValidation($this->aadIssValidation)
             ->withExpectedAlg($this->getExpectedAlg());
@@ -167,7 +206,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         return (new TokenDecrypter())
             ->withExpectedAlg($alg)
             ->withExpectedEnc($enc)
-            ->withClientSecret($this->clientMetadata['client_secret'] ?? null)
+            ->withClientSecret($this->getClientMetadata()['client_secret'] ?? null)
             ->withJwksProvider($this->buildClientJwksProvider());
     }
 }

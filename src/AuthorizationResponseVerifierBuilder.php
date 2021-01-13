@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier;
 
 /**
- * @phpstan-extends AbstractTokenVerifierBuilder<JWTVerifier>
+ * @template-extends AbstractTokenVerifierBuilder<JWTVerifier>
  */
 class AuthorizationResponseVerifierBuilder extends AbstractTokenVerifierBuilder
 {
@@ -19,16 +19,16 @@ class AuthorizationResponseVerifierBuilder extends AbstractTokenVerifierBuilder
 
     protected function getExpectedAlg(): ?string
     {
-        return $this->clientMetadata['authorization_signed_response_alg'] ?? null;
+        return $this->getClientMetadata()['authorization_signed_response_alg'] ?? null;
     }
 
     protected function getExpectedEncAlg(): ?string
     {
-        return $this->clientMetadata['authorization_encrypted_response_alg'] ?? null;
+        return $this->getClientMetadata()['authorization_encrypted_response_alg'] ?? null;
     }
 
     protected function getExpectedEnc(): ?string
     {
-        return $this->clientMetadata['authorization_encrypted_response_enc'] ?? null;
+        return $this->getClientMetadata()['authorization_encrypted_response_enc'] ?? null;
     }
 }

@@ -28,7 +28,7 @@
         "access token"
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.3 || ^8.0",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
         "psr/http-client": "^1.0",
@@ -59,14 +59,11 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16.1",
-        "jangregor/phpstan-prophecy": "^0.6.2",
         "laminas/laminas-diactoros": "^2.2",
         "php-http/curl-client": "^2.1",
-        "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.12.18",
-        "phpstan/phpstan-deprecation-rules": "^0.12.2",
-        "phpstan/phpstan-strict-rules": "^0.12.2",
-        "phpunit/phpunit": "^8.5.3 || ~9.0.0",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.1.0",
+        "vimeo/psalm": "dev-master",
         "web-token/jwt-encryption": "^2.1.5",
         "web-token/jwt-encryption-algorithm-aescbc": "^2.1.5",
         "web-token/jwt-encryption-algorithm-aesgcm": "^2.1.5",
@@ -87,12 +84,12 @@
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run --diff --allow-risky=yes",
         "cs-fix": "php-cs-fixer fix --diff --allow-risky=yes",
-        "phpstan": "phpstan analyse --no-progress",
+        "psalm": "psalm",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-text",
         "check": [
             "@cs-check",
-            "@phpstan",
+            "@psalm",
             "@test"
         ]
     }

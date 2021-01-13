@@ -9,6 +9,9 @@ use function json_decode;
 use function json_encode;
 use Psr\SimpleCache\CacheInterface;
 
+/**
+ * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ */
 class CachedJwksProvider implements JwksProviderInterface
 {
     /** @var JwksProviderInterface */
@@ -36,9 +39,12 @@ class CachedJwksProvider implements JwksProviderInterface
      */
     public function getJwks(): array
     {
-        if (is_string($data = $this->cache->get($this->cacheKey))) {
-            /** @var null|array{keys: array<int, array<string, mixed>>} $jwks */
-            $jwks = json_decode($data, true);
+        /** @var null|string $cached */
+        $cached = $this->cache->get($this->cacheKey);
+
+        if (is_string($cached)) {
+            /** @var null|JWKSetObject $jwks */
+            $jwks = json_decode($cached, true, JSON_THROW_ON_ERROR);
 
             if (is_array($jwks)) {
                 return $jwks;

@@ -8,6 +8,7 @@ use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
 use function json_encode;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -16,6 +17,8 @@ use Psr\Http\Message\StreamInterface;
 
 class RemoteJwksProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetJwksShouldFetchFromRemote(): void
     {
         $client = $this->prophesize(ClientInterface::class);

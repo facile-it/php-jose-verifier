@@ -6,6 +6,9 @@ namespace Facile\JoseVerifier;
 
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 
+/**
+ * @psalm-import-type JWTPayloadObject from Psalm\PsalmTypes
+ */
 interface TokenVerifierInterface
 {
     /**
@@ -23,14 +26,14 @@ interface TokenVerifierInterface
     public function withMaxAge(?int $maxAge);
 
     /**
-     * Verify OpenID id_token
+     * Verify OpenID token
      *
      * @param string $jwt
      *
      * @throws InvalidTokenException
      *
      * @return array The JWT Payload
-     * @phpstan-return array<string, mixed>
+     * @psalm-return JWTPayloadObject
      */
     public function verify(string $jwt): array;
 }

@@ -23,6 +23,10 @@ use function str_replace;
 use function strpos;
 use Throwable;
 
+/**
+ * @psalm-import-type JWTHeaderObject from Psalm\PsalmTypes
+ * @psalm-import-type JWTPayloadObject from Psalm\PsalmTypes
+ */
 abstract class AbstractTokenVerifier implements TokenVerifierInterface
 {
     /** @var string */
@@ -212,7 +216,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             $validator = $validator->claim('auth_time', new AuthTimeChecker($this->maxAge, $this->clockTolerance));
         }
 
-        if ((int) $this->maxAge > 0 || (null !== $this->maxAge && null !== $this->authTimeRequired)) {
+        if ((int) $this->maxAge > 0 || null !== $this->maxAge) {
             $mandatoryClaims[] = 'auth_time';
         }
 
@@ -226,6 +230,8 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
      * @param string $jwt
      *
      * @return array<string, mixed>
+     *
+     * @psalm-return JWTPayloadObject
      */
     protected function getPayload(string $jwt): array
     {
@@ -245,6 +251,8 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             throw new InvalidTokenException('Invalid token provided');
         }
 
+        /** @var JWTPayloadObject $payload */
+
         return $payload;
     }
 
@@ -256,6 +264,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             throw new InvalidTokenException('Invalid JWT provided', 0, $e);
         }
 
+        /** @var JWTHeaderObject $header */
         $header = $jws->getSignature(0)->getProtectedHeader();
 
         $alg = $header['alg'] ?? '';

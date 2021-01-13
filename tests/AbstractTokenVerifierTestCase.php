@@ -10,10 +10,13 @@ use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Jose\Component\KeyManagement\JWKFactory;
+use Prophecy\PhpUnit\ProphecyTrait;
 use function time;
 
 abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
 {
+    use ProphecyTrait;
+
     abstract protected function buildVerifier(TokenDecrypterInterface $decrypter = null): AbstractTokenVerifier;
 
     public function testShouldReloadJwksWhenKidNotFound(): void

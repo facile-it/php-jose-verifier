@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier;
 
 /**
- * @phpstan-extends AbstractTokenVerifierBuilder<IdTokenVerifier>
+ * @template-extends AbstractTokenVerifierBuilder<IdTokenVerifier>
  */
 final class IdTokenVerifierBuilder extends AbstractTokenVerifierBuilder
 {
@@ -16,16 +16,16 @@ final class IdTokenVerifierBuilder extends AbstractTokenVerifierBuilder
 
     protected function getExpectedAlg(): ?string
     {
-        return $this->clientMetadata['id_token_signed_response_alg'] ?? null;
+        return $this->getClientMetadata()['id_token_signed_response_alg'] ?? null;
     }
 
     protected function getExpectedEncAlg(): ?string
     {
-        return $this->clientMetadata['id_token_encrypted_response_alg'] ?? null;
+        return $this->getClientMetadata()['id_token_encrypted_response_alg'] ?? null;
     }
 
     protected function getExpectedEnc(): ?string
     {
-        return $this->clientMetadata['id_token_encrypted_response_enc'] ?? null;
+        return $this->getClientMetadata()['id_token_encrypted_response_enc'] ?? null;
     }
 }

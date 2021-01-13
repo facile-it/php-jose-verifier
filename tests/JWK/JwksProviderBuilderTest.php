@@ -11,6 +11,7 @@ use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
 use function get_class;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -18,6 +19,8 @@ use ReflectionClass;
 
 class JwksProviderBuilderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @param object $instance
      * @param string $propertyName

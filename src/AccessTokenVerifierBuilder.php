@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier;
 
 /**
- * @phpstan-extends AbstractTokenVerifierBuilder<JWTVerifier>
+ * @template-extends AbstractTokenVerifierBuilder<JWTVerifier>
  */
 final class AccessTokenVerifierBuilder extends AbstractTokenVerifierBuilder
 {

@@ -9,10 +9,13 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use function json_encode;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\SimpleCache\CacheInterface;
 
 class CachedJwksProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetJwksShouldSaveCacheWithoutTtl(): void
     {
         $wrappedProvider = $this->prophesize(JwksProviderInterface::class);

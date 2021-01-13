@@ -7,9 +7,14 @@ namespace Facile\JoseVerifier;
 use Facile\JoseVerifier\ClaimChecker\AtHashChecker;
 use Facile\JoseVerifier\ClaimChecker\CHashChecker;
 use Facile\JoseVerifier\ClaimChecker\SHashChecker;
+use Facile\JoseVerifier\Exception\InvalidTokenException;
+use Jose\Component\Signature\Serializer\CompactSerializer;
 use Jose\Easy\Validate;
 use Throwable;
 
+/**
+ * @psalm-import-type JWTHeaderObject from Psalm\PsalmTypes
+ */
 final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVerifierInterface
 {
     /** @var string|null */
@@ -66,22 +71,32 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
     public function verify(string $jwt): array
     {
         $jwt = $this->decrypt($jwt);
+
+        try {
+            $jws = (new CompactSerializer())->unserialize($jwt);
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidTokenException('Invalid JWT provided', 0, $e);
+        }
+
+        $header = $jws->getSignature(0)->getProtectedHeader();
+
         $validator = $this->create($jwt);
 
         $requiredClaims = ['iss', 'sub', 'aud', 'exp', 'iat'];
+        $alg = $header['alg'] ?? null;
 
         if (null !== $this->accessToken) {
             $requiredClaims[] = 'at_hash';
-            $validator = $validator->claim('at_hash', new AtHashChecker($this->accessToken, $header['alg'] ?? ''));
+            $validator = $validator->claim('at_hash', new AtHashChecker($this->accessToken, $alg ?: ''));
         }
 
         if (null !== $this->code) {
             $requiredClaims[] = 'c_hash';
-            $validator = $validator->claim('c_hash', new CHashChecker($this->code, $header['alg'] ?? ''));
+            $validator = $validator->claim('c_hash', new CHashChecker($this->code, $alg ?: ''));
         }
 
         if (null !== $this->state) {
-            $validator = $validator->claim('s_hash', new SHashChecker($this->state, $header['alg'] ?? ''));
+            $validator = $validator->claim('s_hash', new SHashChecker($this->state, $alg ?: ''));
         }
 
         /** @var Validate $validator */

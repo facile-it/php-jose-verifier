@@ -26,7 +26,7 @@ final class NonceChecker implements ClaimChecker
     public function checkClaim($value): void
     {
         if ($value !== $this->nonce) {
-            throw new InvalidClaimException(sprintf('Nonce mismatch, expected %s, got: %s', $this->nonce, $value), self::CLAIM_NAME, $value);
+            throw new InvalidClaimException(sprintf('Nonce mismatch, expected %s, got: %s', $this->nonce, (string) $value), self::CLAIM_NAME, $value);
         }
     }
 

@@ -52,10 +52,10 @@ abstract class AbstractHashChecker implements ClaimChecker
     public function checkClaim($value): void
     {
         $hash = hash($this->getShaSize($this->alg), $this->valueToCheck, true);
-        $generated = Base64Url::encode(substr($hash, 0, strlen($hash) / 2));
+        $generated = Base64Url::encode(substr($hash, 0, (int) round(strlen($hash) / 2)));
 
         if ($value !== $generated) {
-            throw new InvalidClaimException(sprintf($this->supportedClaim() . ' mismatch, expected %s, got: %s', $generated, $value), $this->supportedClaim(), $value);
+            throw new InvalidClaimException(sprintf($this->supportedClaim() . ' mismatch, expected %s, got: %s', $generated, (string) $value), $this->supportedClaim(), $value);
         }
     }
 }

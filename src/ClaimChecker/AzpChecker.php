@@ -26,7 +26,7 @@ final class AzpChecker implements ClaimChecker
     public function checkClaim($value): void
     {
         if ($value !== $this->azp) {
-            throw new InvalidClaimException(sprintf('azp must be the client_id, expected %s, got: %s', $this->azp, $value), self::CLAIM_NAME, $value);
+            throw new InvalidClaimException(sprintf('azp must be the client_id, expected %s, got: %s', $this->azp, (string) $value), self::CLAIM_NAME, $value);
         }
     }
 

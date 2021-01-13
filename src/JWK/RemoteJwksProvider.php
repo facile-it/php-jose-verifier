@@ -11,6 +11,9 @@ use function json_decode;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
+/**
+ * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ */
 class RemoteJwksProvider implements JwksProviderInterface
 {
     /** @var ClientInterface */
@@ -58,6 +61,8 @@ class RemoteJwksProvider implements JwksProviderInterface
 
     /**
      * @inheritDoc
+     *
+     * @psalm-return JWKSetObject
      */
     public function getJwks(): array
     {
@@ -73,13 +78,24 @@ class RemoteJwksProvider implements JwksProviderInterface
             throw new RuntimeException('Unable to get the key set.', $response->getStatusCode());
         }
 
+        /** @var mixed $data */
         $data = json_decode((string) $response->getBody(), true);
 
-        if (! is_array($data) || ! array_key_exists('keys', $data)) {
-            throw new RuntimeException('Invalid key set content');
+        if ($this->isJWKSet($data)) {
+            /** @var JWKSetObject $data */
+            return $data;
         }
 
-        return $data;
+        throw new RuntimeException('Invalid key set content');
+    }
+
+    /**
+     * @param mixed $data
+     * @psalm-assert-if-true JWKSetObject $data
+     */
+    private function isJWKSet($data): bool
+    {
+        return is_array($data) && array_key_exists('keys', $data) && is_array($data['keys']);
     }
 
     /**

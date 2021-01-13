@@ -10,14 +10,17 @@ use InvalidArgumentException;
 use IteratorAggregate;
 use JsonSerializable;
 use Traversable;
+use Facile\JoseVerifier\Psalm\PsalmTypes;
 
 /**
- * @phpstan-implements IteratorAggregate<mixed, mixed>
+ * @implements IteratorAggregate<mixed, mixed>
+ * @psalm-import-type JWKSetObject from PsalmTypes
  */
 class JWKSet implements Countable, IteratorAggregate, JsonSerializable
 {
     /**
-     * @phpstan-return array{keys: array<mixed>}
+     * @return JWKSetObject
      */
-    public function jsonSerialize(): array;
+    public function jsonSerialize(): array
+    {}
 }

@@ -38,7 +38,9 @@ class Validate extends AbstractLoader
 
         $jwt = new JWT();
         $jwt->header->replace($jws->getSignature(0)->getProtectedHeader());
-        $jwt->claims->replace(JsonConverter::decode($jws->getPayload() ?? '{}'));
+        /** @var array<string, mixed> $claims */
+        $claims = JsonConverter::decode($jws->getPayload() ?? '{}');
+        $jwt->claims->replace($claims);
 
         $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
         $claimChecker->check($jwt->claims->all(), $this->mandatoryClaims);
@@ -48,6 +50,7 @@ class Validate extends AbstractLoader
 
     /**
      * @return string[]
+     * @psalm-suppress UndefinedClass
      */
     protected function getAlgorithmMap(): array
     {

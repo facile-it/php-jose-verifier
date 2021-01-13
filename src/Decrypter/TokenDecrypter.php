@@ -144,7 +144,7 @@ class TokenDecrypter implements TokenDecrypterInterface
 
     /**
      * @return string[]
-     * @phpstan-return array<class-string>
+     * @psalm-return list<class-string<Algorithm>>
      */
     protected function getAlgorithmMap(): array
     {
