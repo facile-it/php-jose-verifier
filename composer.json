@@ -61,7 +61,7 @@
         "friendsofphp/php-cs-fixer": "^2.16.1",
         "laminas/laminas-diactoros": "^2.2",
         "php-http/curl-client": "^2.1",
-        "phpspec/prophecy-phpunit": "^1.1",
+        "phpspec/prophecy-phpunit": "^1.1 || ^2.0",
         "phpunit/phpunit": "^8.5.14 || ^9.3",
         "vimeo/psalm": "^4.4.1",
         "web-token/jwt-encryption": "^2.2.0",
