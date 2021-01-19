@@ -44,7 +44,7 @@ class CachedJwksProvider implements JwksProviderInterface
 
         if (is_string($cached)) {
             /** @var null|JWKSetObject $jwks */
-            $jwks = json_decode($cached, true, JSON_THROW_ON_ERROR);
+            $jwks = json_decode($cached, true);
 
             if (is_array($jwks)) {
                 return $jwks;

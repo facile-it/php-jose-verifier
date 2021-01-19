@@ -28,7 +28,7 @@
         "access token"
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.2 || ^8.0",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
         "psr/http-client": "^1.0",
