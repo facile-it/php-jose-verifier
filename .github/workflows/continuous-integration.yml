@@ -40,14 +40,20 @@ jobs:
         uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
+          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-"
 
       - name: "Install dependencies with composer"
-        run: "composer install --no-interaction --no-progress --no-suggest --prefer-dist"
+        run: "composer update --no-interaction --no-progress --no-suggest --prefer-dist"
 
       - name: "Run psalm"
-        run: "vendor/bin/psalm"
+        run: "vendor/bin/psalm --long-progress --output-format=github --report=psalm.sarif"
+
+      - name: "Upload SARIF file"
+        uses: github/codeql-action/upload-sarif@v1
+        continue-on-error: true
+        with:
+          sarif_file: psalm.sarif
 
   phpunit:
     name: "PHPUnit"
@@ -88,16 +94,20 @@ jobs:
         uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
+          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-"
 
       - name: "Install dependencies with composer"
-        run: "composer install --no-interaction --no-progress --no-suggest --prefer-dist"
+        run: "composer update --no-interaction --no-progress --no-suggest --prefer-dist"
         if: "${{ matrix.deps != 'lowest' }}"
 
       - name: "Install lowest possible dependencies with composer"
         run: "composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-lowest"
         if: "${{ matrix.deps == 'lowest' }}"
+
+      - name: "Install phpspec/prophecy-phpunit"
+        run: "composer require --dev phpspec/prophecy-phpunit --no-update"
+        if: "${{ matrix.php-version != '7.2' }}"
 
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit -c phpunit.xml.dist"
