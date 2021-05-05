@@ -3,7 +3,7 @@
 A library to validate JWT tokens.
 
 [![Build Status](https://github.com/facile-it/php-jose-verifier/workflows/Continuous%20Integration/badge.svg?branch=master)](https://github.com/facile-it/php-jose-verifier/actions)
-[![Coverage](https://codecov.io/gh/facile-it/php-jose-verifier/branch/master/graph/badge.svg)](https://codecov.io/gh/facile-it/php-jose-verifier)
+[![codecov](https://codecov.io/gh/facile-it/php-jose-verifier/branch/master/graph/badge.svg?token=1RHS0NWD2L)](https://codecov.io/gh/facile-it/php-jose-verifier)
 [![Latest Stable Version](https://poser.pugx.org/facile-it/php-jose-verifier/v/stable)](https://packagist.org/packages/facile-it/php-jose-verifier)
 [![Total Downloads](https://poser.pugx.org/facile-it/php-jose-verifier/downloads)](https://packagist.org/packages/facile-it/php-jose-verifier)
 [![Latest Unstable Version](https://poser.pugx.org/facile-it/php-jose-verifier/v/unstable)](https://packagist.org/packages/facile-it/php-jose-verifier)
