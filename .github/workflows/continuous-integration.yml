@@ -111,12 +111,14 @@ jobs:
 
       - name: "Run PHPCS check"
         run: "composer cs-check"
-        if: "${{ matrix.php-version == '7.4' }}"
-
-      - name: "Run PHPUnit with coverage"
-        run: "vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover=coverage.xml"
         if: "${{ matrix.coverage == 'true' }}"
 
-      - name: "Upload coverage"
-        run: "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./coverage.xml"
+      - name: "Run PHPUnit with coverage"
+        run: "vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover=coverage-report.xml"
+        if: "${{ matrix.coverage == 'true' }}"
+
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: coverage-report.xml
         if: "${{ matrix.coverage == 'true' }}"
