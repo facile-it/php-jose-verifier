@@ -12,6 +12,7 @@ use Jose\Component\Signature\Algorithm\HS256;
 use Jose\Component\Signature\Algorithm\RS256;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\Serializer\CompactSerializer;
+use function json_encode;
 use PHPUnit\Framework\TestCase;
 use function strlen;
 use function substr;
@@ -27,7 +28,7 @@ class AbstractJwtTestCase extends TestCase
 
     protected function createSignedToken(array $payload, array $header, JWK $jwk): string
     {
-        return $this->createRawSignedToken((string) \json_encode($payload), $header, $jwk);
+        return $this->createRawSignedToken((string) json_encode($payload), $header, $jwk);
     }
 
     protected function createRawSignedToken(string $payload, array $header, JWK $jwk): string

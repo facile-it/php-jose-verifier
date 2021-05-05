@@ -29,9 +29,6 @@ class RemoteJwksProvider implements JwksProviderInterface
     private $headers;
 
     /**
-     * @param ClientInterface $client
-     * @param RequestFactoryInterface $requestFactory
-     * @param string $uri
      * @param array<string, string|string[]> $headers
      */
     public function __construct(

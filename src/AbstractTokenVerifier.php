@@ -227,8 +227,6 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     }
 
     /**
-     * @param string $jwt
-     *
      * @return array<string, mixed>
      *
      * @psalm-return JWTPayloadObject
@@ -252,7 +250,6 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
         }
 
         /** @var JWTPayloadObject $payload */
-
         return $payload;
     }
 
@@ -264,7 +261,6 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             throw new InvalidTokenException('Invalid JWT provided', 0, $e);
         }
 
-        /** @var JWTHeaderObject $header */
         $header = $jws->getSignature(0)->getProtectedHeader();
 
         $alg = $header['alg'] ?? '';
@@ -310,9 +306,8 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
 
     protected function processException(Throwable $e): Throwable
     {
-        switch (true) {
-            case $e instanceof \InvalidArgumentException:
-                return new InvalidArgumentException($e->getMessage(), 0, $e);
+        if ($e instanceof \InvalidArgumentException) {
+            return new InvalidArgumentException($e->getMessage(), 0, $e);
         }
 
         return new InvalidTokenException('Invalid token provided', 0, $e);

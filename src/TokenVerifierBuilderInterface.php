@@ -34,7 +34,6 @@ interface TokenVerifierBuilderInterface
     public function setClientJwksProvider(?JwksProviderInterface $clientJwksProvider): void;
 
     /**
-     * @return TokenVerifierInterface
      * @psalm-return TVerifier
      */
     public function build(): TokenVerifierInterface;

@@ -27,6 +27,7 @@ use Jose\Component\Encryption\Serializer\JWESerializerManager;
 use Jose\Easy\AlgorithmProvider;
 use Jose\Easy\ContentEncryptionAlgorithmChecker;
 use function preg_match;
+use Throwable;
 
 class TokenDecrypter implements TokenDecrypterInterface
 {
@@ -137,7 +138,7 @@ class TokenDecrypter implements TokenDecrypterInterface
                 $this->buildJwks($jwt),
                 $recipient
             )->getPayload();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidTokenException('Unable to decrypt JWE', 0, $e);
         }
     }

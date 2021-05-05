@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Psalm;
 
+use function array_merge;
+use function array_values;
+use function iterator_to_array;
 use Psalm\Plugin\PluginEntryPointInterface;
 use Psalm\Plugin\RegistrationInterface;
 use RecursiveDirectoryIterator;
@@ -23,13 +26,17 @@ final class Plugin implements PluginEntryPointInterface
         }
     }
 
-    /** @return array<string> */
+    /**
+     * @return array<string>
+     */
     private function getStubFiles(): array
     {
         return $this->rsearch(__DIR__ . '/../../stubs/', '/^.*\.phpstub$/');
     }
 
-    /** @return array<string> */
+    /**
+     * @return array<string>
+     */
     private function rsearch(string $folder, string $pattern): array
     {
         $dir = new RecursiveDirectoryIterator($folder);

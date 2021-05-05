@@ -109,6 +109,10 @@ jobs:
         run: "vendor/bin/phpunit -c phpunit.xml.dist"
         if: "${{ matrix.coverage != 'true' }}"
 
+      - name: "Run PHPCS check"
+        run: "composer cs-check"
+        if: "${{ matrix.php-version == '7.4' }}"
+
       - name: "Run PHPUnit with coverage"
         run: "vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover=coverage.xml"
         if: "${{ matrix.coverage == 'true' }}"

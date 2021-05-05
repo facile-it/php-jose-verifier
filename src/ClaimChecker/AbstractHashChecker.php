@@ -8,6 +8,7 @@ use Base64Url\Base64Url;
 use function hash;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
+use function round;
 use function sprintf;
 use function strlen;
 use function substr;
@@ -22,9 +23,6 @@ abstract class AbstractHashChecker implements ClaimChecker
 
     /**
      * SHashChecker constructor.
-     *
-     * @param string $valueToCheck
-     * @param string $alg
      */
     public function __construct(string $valueToCheck, string $alg)
     {

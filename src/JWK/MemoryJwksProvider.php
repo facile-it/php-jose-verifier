@@ -16,7 +16,6 @@ class MemoryJwksProvider implements JwksProviderInterface
     private $jwks;
 
     /**
-     * @param array $jwks
      * @psalm-param JWKSetObject $jwks
      */
     public function __construct(array $jwks = ['keys' => []])

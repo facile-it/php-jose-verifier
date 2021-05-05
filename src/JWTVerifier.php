@@ -11,6 +11,7 @@ final class JWTVerifier extends AbstractTokenVerifier
 {
     /**
      * @inheritDoc
+     * @psalm-suppress MixedReturnTypeCoercion
      */
     public function verify(string $jwt): array
     {

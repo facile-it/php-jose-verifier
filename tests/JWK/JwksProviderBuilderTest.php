@@ -22,9 +22,6 @@ class JwksProviderBuilderTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @param object $instance
-     * @param string $propertyName
-     *
      * @return mixed
      */
     protected function getPropertyValue(object $instance, string $propertyName)
