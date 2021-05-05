@@ -166,3 +166,13 @@ $builder->setClientMetadata($clientMetadata);
 $verifier = $builder->build();
 $payload = $verifier->verify($jwt);
 ```
+
+## Using Psalm
+
+If you need to use Psalm you can include the plugin in your `psalm.xml`.
+
+```
+<plugins>
+    <pluginClass class="Facile\JoseVerifier\Psalm\Plugin" />
+</plugins>
+```
