@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\JWK;
 
 use function is_array;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use Psr\SimpleCache\CacheInterface;

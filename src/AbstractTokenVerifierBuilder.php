@@ -24,13 +24,13 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
      * @var null|array<string, mixed>
      * @psalm-var null|ClientMetadataObject
      */
-    protected $clientMetadata = null;
+    protected $clientMetadata;
 
     /**
      * @var null|array<string, mixed>
      * @psalm-var null|IssuerMetadataObject
      */
-    protected $issuerMetadata = null;
+    protected $issuerMetadata;
 
     /** @var int */
     protected $clockTolerance = 0;
@@ -109,7 +109,6 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         $jwks = ['keys' => []];
 
         if ($this->clientMetadata) {
-            /** @var JWKSetObject $jwks */
             $jwks = $this->clientMetadata['jwks'] ?? $jwks;
         }
 
@@ -122,10 +121,6 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     }
 
     /**
-     * @param string $issuer
-     * @param string $clientId
-     *
-     * @return AbstractTokenVerifier
      * @psalm-return TVerifier
      */
     abstract protected function getVerifier(string $issuer, string $clientId): AbstractTokenVerifier;
@@ -163,7 +158,6 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     }
 
     /**
-     * @return TokenVerifierInterface
      * @psalm-return TVerifier
      */
     public function build(): TokenVerifierInterface

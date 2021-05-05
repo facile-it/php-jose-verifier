@@ -58,6 +58,7 @@
         }
     },
     "require-dev": {
+        "facile-it/facile-coding-standard": "^0.4.1",
         "friendsofphp/php-cs-fixer": "^2.16.1",
         "laminas/laminas-diactoros": "^2.2",
         "php-http/curl-client": "^2.1",

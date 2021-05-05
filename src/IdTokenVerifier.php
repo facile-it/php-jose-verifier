@@ -8,6 +8,7 @@ use Facile\JoseVerifier\ClaimChecker\AtHashChecker;
 use Facile\JoseVerifier\ClaimChecker\CHashChecker;
 use Facile\JoseVerifier\ClaimChecker\SHashChecker;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
+use InvalidArgumentException;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 use Jose\Easy\Validate;
 use Throwable;
@@ -27,8 +28,6 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
     protected $state;
 
     /**
-     * @param string|null $accessToken
-     *
      * @return $this
      */
     public function withAccessToken(?string $accessToken): self
@@ -40,8 +39,6 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
     }
 
     /**
-     * @param string|null $code
-     *
      * @return $this
      */
     public function withCode(?string $code): self
@@ -53,8 +50,6 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
     }
 
     /**
-     * @param string|null $state
-     *
      * @return $this
      */
     public function withState(?string $state): self
@@ -67,6 +62,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
     /**
      * @inheritDoc
+     * @psalm-suppress MixedReturnTypeCoercion
      */
     public function verify(string $jwt): array
     {
@@ -74,7 +70,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
         try {
             $jws = (new CompactSerializer())->unserialize($jwt);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new InvalidTokenException('Invalid JWT provided', 0, $e);
         }
 

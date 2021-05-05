@@ -19,9 +19,6 @@ abstract class AbstractVerifierBuilderTestCase extends TestCase
     abstract protected function getExpectedVerifierClass(): string;
 
     /**
-     * @param object $instance
-     * @param string $propertyName
-     *
      * @return mixed
      */
     protected function getPropertyValue(object $instance, string $propertyName)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Facile\JoseVerifierTest;
 
 use Base64Url\Base64Url;
+use Exception;
 use Facile\JoseVerifier\AbstractTokenVerifier;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
@@ -12,13 +13,12 @@ use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWTVerifier;
 use Jose\Component\KeyManagement\JWKFactory;
+use function random_bytes;
 use function time;
 
 class JWTVerifierTest extends AbstractTokenVerifierTestCase
 {
     /**
-     * @param TokenDecrypterInterface|null $decrypter
-     *
      * @return JWTVerifier
      */
     protected function buildVerifier(TokenDecrypterInterface $decrypter = null): AbstractTokenVerifier
@@ -218,10 +218,7 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
     /**
      * @dataProvider verifyTokenProvider
      *
-     * @param array $payload
-     * @param bool $expected
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     public function testValidateTokenWithAsyKey(array $payload, bool $expected): void
     {
@@ -229,7 +226,7 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
             $this->expectException(InvalidTokenException::class);
         }
 
-        $clientSecret = Base64Url::encode(\random_bytes(32));
+        $clientSecret = Base64Url::encode(random_bytes(32));
         $jwk = jose_secret_key($clientSecret);
 
         $token = $this->createSignedToken($payload, [

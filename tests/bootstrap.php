@@ -1,7 +1,13 @@
 <?php
 
-namespace Prophecy\PhpUnit;
+declare(strict_types=1);
 
-if (! trait_exists(\Prophecy\PhpUnit\ProphecyTrait::class)) {
-    trait ProphecyTrait {}
+namespace Prophecy\PhpUnit {
+    use function trait_exists;
+
+    if (! trait_exists(\Prophecy\PhpUnit\ProphecyTrait::class)) {
+        trait ProphecyTrait
+        {
+        }
+    }
 }

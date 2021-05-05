@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Validate;
 
+use function count;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use Jose\Component\Checker;
 use Jose\Component\Core\AlgorithmManager;
@@ -24,7 +25,7 @@ class Validate extends AbstractLoader
 
     public function run(): JWT
     {
-        if (0 !== \count($this->allowedAlgorithms)) {
+        if (0 !== count($this->allowedAlgorithms)) {
             $this->headerCheckers[] = new Checker\AlgorithmChecker($this->allowedAlgorithms, true);
         }
         $jws = (new CompactSerializer())->unserialize($this->token);

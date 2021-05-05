@@ -10,6 +10,7 @@ use Http\Discovery\Psr18ClientDiscovery;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
+use function sha1;
 use function substr;
 
 /**
@@ -39,10 +40,6 @@ class JwksProviderBuilder
     private $cacheTtl = 86400;
 
     /**
-     * @param array $jwks
-     *
-     * @return self
-     *
      * @psalm-param JWKSetObject $jwks
      */
     public function setJwks(array $jwks): self
@@ -104,7 +101,6 @@ class JwksProviderBuilder
         }
 
         if (null === $this->jwksUri) {
-            /** @var JWKSetObject $jwks */
             $jwks = $this->jwks ?? ['keys' => []];
 
             return new MemoryJwksProvider($jwks);
