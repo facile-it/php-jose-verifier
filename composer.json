@@ -11,7 +11,10 @@
     ],
     "minimum-stability": "stable",
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "facile-it/facile-coding-standard": true
+        }
     },
     "keywords": [
         "jwt",
@@ -58,8 +61,8 @@
         }
     },
     "require-dev": {
-        "facile-it/facile-coding-standard": "^0.4.1",
-        "friendsofphp/php-cs-fixer": "^2.16.1",
+        "facile-it/facile-coding-standard": "^0.5",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "laminas/laminas-diactoros": "^2.2",
         "php-http/curl-client": "^2.1",
         "phpspec/prophecy-phpunit": "^1.1 || ^2.0",
