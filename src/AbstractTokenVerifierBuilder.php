@@ -13,8 +13,8 @@ use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 
 /**
  * @psalm-import-type ClientMetadataObject from Psalm\PsalmTypes
- * @psalm-import-type IssuerMetadataObject from Psalm\PsalmTypes
  * @psalm-import-type JWKSetObject from Psalm\PsalmTypes
+ * @psalm-type IssuerMetadataObject = array{issuer: string, jwks_uri: string}
  * @template TVerifier of AbstractTokenVerifier
  * @template-implements TokenVerifierBuilderInterface<TVerifier>
  */
