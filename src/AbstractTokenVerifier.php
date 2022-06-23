@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use Facile\JoseVerifier\ClaimChecker\AuthTimeChecker;
-use Facile\JoseVerifier\ClaimChecker\AzpChecker;
-use Facile\JoseVerifier\ClaimChecker\NonceChecker;
+use Facile\JoseVerifier\Checker\AuthTimeChecker;
+use Facile\JoseVerifier\Checker\AzpChecker;
+use Facile\JoseVerifier\Checker\NonceChecker;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
 use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
@@ -15,6 +15,12 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\Validate\Validate;
 use function is_array;
+use Jose\Component\Checker\AlgorithmChecker;
+use Jose\Component\Checker\AudienceChecker;
+use Jose\Component\Checker\ExpirationTimeChecker;
+use Jose\Component\Checker\IssuedAtChecker;
+use Jose\Component\Checker\IssuerChecker;
+use Jose\Component\Checker\NotBeforeChecker;
 use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
@@ -189,38 +195,37 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
 
         if ($this->aadIssValidation) {
             $payload = $this->getPayload($jwt);
-            $expectedIssuer = str_replace('{tenantid}', $payload['tid'] ?? '', $expectedIssuer);
+            $expectedIssuer = str_replace('{tenantid}', (string) ($payload['tid'] ?? ''), $expectedIssuer);
         }
 
         $validator = Validate::token($jwt)
             ->keyset($this->buildJwks($jwt))
-            ->iss($expectedIssuer)
-            ->iat($this->clockTolerance)
-            ->aud($this->clientId)
-            ->exp($this->clockTolerance)
-            ->nbf($this->clockTolerance);
+            ->claim(new IssuerChecker([$expectedIssuer], true))
+            ->claim(new IssuedAtChecker($this->clockTolerance, true))
+            ->claim(new AudienceChecker($this->clientId, true))
+            ->claim(new ExpirationTimeChecker($this->clockTolerance))
+            ->claim(new NotBeforeChecker($this->clockTolerance, true));
 
         if (null !== $this->azp) {
-            $validator = $validator->claim('azp', new AzpChecker($this->azp));
+            $validator = $validator->claim(new AzpChecker($this->azp));
         }
 
         if (null !== $this->expectedAlg) {
-            $validator = $validator->alg($this->expectedAlg);
+            $validator = $validator->header(new AlgorithmChecker([$this->expectedAlg], true));
         }
 
         if (null !== $this->nonce) {
-            $validator = $validator->claim('nonce', new NonceChecker($this->nonce));
+            $validator = $validator->claim(new NonceChecker($this->nonce));
         }
 
         if (null !== $this->maxAge) {
-            $validator = $validator->claim('auth_time', new AuthTimeChecker($this->maxAge, $this->clockTolerance));
+            $validator = $validator->claim(new AuthTimeChecker($this->maxAge, $this->clockTolerance));
         }
 
         if ((int) $this->maxAge > 0 || null !== $this->maxAge) {
             $mandatoryClaims[] = 'auth_time';
         }
 
-        /** @var Validate $validator */
         $validator = $validator->mandatory($mandatoryClaims);
 
         return $validator;

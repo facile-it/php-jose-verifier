@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\ClaimChecker;
+namespace Facile\JoseVerifier\Checker;
 
 use Base64Url\Base64Url;
 use function hash;
@@ -13,6 +13,9 @@ use function sprintf;
 use function strlen;
 use function substr;
 
+/**
+ * @internal
+ */
 abstract class AbstractHashChecker implements ClaimChecker
 {
     /** @var string */
@@ -45,7 +48,7 @@ abstract class AbstractHashChecker implements ClaimChecker
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      */
     public function checkClaim($value): void
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifierTest\ClaimChecker;
 
-use Facile\JoseVerifier\ClaimChecker\AzpChecker;
+use Facile\JoseVerifier\Checker\AzpChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
 
