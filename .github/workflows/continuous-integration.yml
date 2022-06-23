@@ -56,6 +56,46 @@ jobs:
         with:
           sarif_file: psalm.sarif
 
+  codestyle:
+    name: "Code Style"
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+        deps:
+          - "latest"
+        coverage:
+          - "false"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 2
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "pcov"
+          ini-values: "zend.assertions=1"
+          extensions: "bcmath gmp"
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v2"
+        with:
+          path: "~/.composer/cache"
+          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-"
+
+      - name: "Install dependencies with composer"
+        run: "composer update --no-interaction --no-progress --no-suggest --prefer-dist"
+
+      - name: "Run PHPCS check"
+        run: "composer cs-check"
+
   phpunit:
     name: "PHPUnit"
     runs-on: "ubuntu-20.04"
@@ -67,13 +107,14 @@ jobs:
           - "7.3"
           - "7.4"
           - "8.0"
+          - "8.1"
         deps:
           - "lowest"
           - "latest"
         coverage:
           - "false"
         include:
-          - php-version: "7.4"
+          - php-version: "8.1"
             deps: "latest"
             coverage: "true"
 
@@ -109,10 +150,6 @@ jobs:
       - name: "Run PHPUnit"
         run: "vendor/bin/phpunit -c phpunit.xml.dist"
         if: "${{ matrix.coverage != 'true' }}"
-
-      - name: "Run PHPCS check"
-        run: "composer cs-check"
-        if: "${{ matrix.coverage == 'true' }}"
 
       - name: "Run PHPUnit with coverage"
         run: "vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover=coverage-report.xml"
