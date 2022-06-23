@@ -34,6 +34,7 @@ final class ContentEncryptionAlgorithmChecker implements HeaderChecker
 
     /**
      * @param mixed $value
+     *
      * @throws InvalidHeaderException if the header is invalid
      */
     public function checkHeader($value): void
