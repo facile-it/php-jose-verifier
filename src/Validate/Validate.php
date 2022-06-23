@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Validate;
 
-use Facile\JoseVerifier\Checker\CallableChecker;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use Jose\Component\Checker;
 use Jose\Component\Core\AlgorithmManager;
@@ -125,74 +124,20 @@ final class Validate
         return $clone;
     }
 
-    /**
-     * @param array|Checker\ClaimChecker|mixed $checker
-     * @psalm-param array|Checker\ClaimChecker|mixed $checker
-     */
-    public function claim(string $key, $checker, bool $inHeader = false): self
+    public function claim(Checker\ClaimChecker $checker): self
     {
         $clone = clone $this;
-        if (false === $checker) {
-            unset($clone->claimCheckers[$key]);
 
-            return $clone;
-        }
-
-        switch (true) {
-            case $checker instanceof Checker\ClaimChecker:
-                break;
-
-            case is_array($checker):
-                $checker = new CallableChecker($key, static function ($value) use ($checker): bool {
-                    return in_array($value, $checker, true);
-                });
-
-                break;
-
-            default:
-                $checker = new CallableChecker($key, static function ($value) use ($checker): bool {
-                    return $value === $checker;
-                });
-        }
-
-        $clone->claimCheckers[$key] = $checker;
-        if ($inHeader) {
-            return $clone->header($key, $checker);
-        }
+        $clone->claimCheckers[] = $checker;
 
         return $clone;
     }
 
-    /**
-     * @param array|Checker\HeaderChecker|false|mixed $checker
-     */
-    public function header(string $key, $checker): self
+    public function header(Checker\HeaderChecker $checker): self
     {
         $clone = clone $this;
-        if (false === $checker) {
-            unset($clone->headerCheckers[$key]);
 
-            return $clone;
-        }
-
-        switch (true) {
-            case $checker instanceof Checker\HeaderChecker:
-                break;
-
-            case is_array($checker):
-                $checker = new CallableChecker($key, static function ($value) use ($checker): bool {
-                    return in_array($value, $checker, true);
-                });
-
-                break;
-
-            default:
-                $checker = new CallableChecker($key, static function ($value) use ($checker): bool {
-                    return $value === $checker;
-                });
-        }
-
-        $clone->headerCheckers[$key] = $checker;
+        $clone->headerCheckers[] = $checker;
 
         return $clone;
     }

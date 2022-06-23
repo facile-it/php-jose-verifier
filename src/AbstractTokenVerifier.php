@@ -200,26 +200,26 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
 
         $validator = Validate::token($jwt)
             ->keyset($this->buildJwks($jwt))
-            ->claim('iss', new IssuerChecker([$expectedIssuer], true))
-            ->claim('iat', new IssuedAtChecker($this->clockTolerance, true))
-            ->claim('aud', new AudienceChecker($this->clientId, true))
-            ->claim('exp', new ExpirationTimeChecker($this->clockTolerance))
-            ->claim('nbf', new NotBeforeChecker($this->clockTolerance, true));
+            ->claim(new IssuerChecker([$expectedIssuer], true))
+            ->claim(new IssuedAtChecker($this->clockTolerance, true))
+            ->claim(new AudienceChecker($this->clientId, true))
+            ->claim(new ExpirationTimeChecker($this->clockTolerance))
+            ->claim(new NotBeforeChecker($this->clockTolerance, true));
 
         if (null !== $this->azp) {
-            $validator = $validator->claim('azp', new AzpChecker($this->azp));
+            $validator = $validator->claim(new AzpChecker($this->azp));
         }
 
         if (null !== $this->expectedAlg) {
-            $validator = $validator->header('alg', new AlgorithmChecker([$this->expectedAlg], true));
+            $validator = $validator->header(new AlgorithmChecker([$this->expectedAlg], true));
         }
 
         if (null !== $this->nonce) {
-            $validator = $validator->claim('nonce', new NonceChecker($this->nonce));
+            $validator = $validator->claim(new NonceChecker($this->nonce));
         }
 
         if (null !== $this->maxAge) {
-            $validator = $validator->claim('auth_time', new AuthTimeChecker($this->maxAge, $this->clockTolerance));
+            $validator = $validator->claim(new AuthTimeChecker($this->maxAge, $this->clockTolerance));
         }
 
         if ((int) $this->maxAge > 0 || null !== $this->maxAge) {

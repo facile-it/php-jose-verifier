@@ -82,16 +82,16 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
         if (null !== $this->accessToken) {
             $requiredClaims[] = 'at_hash';
-            $validator = $validator->claim('at_hash', new AtHashChecker($this->accessToken, $alg ?: ''));
+            $validator = $validator->claim(new AtHashChecker($this->accessToken, $alg ?: ''));
         }
 
         if (null !== $this->code) {
             $requiredClaims[] = 'c_hash';
-            $validator = $validator->claim('c_hash', new CHashChecker($this->code, $alg ?: ''));
+            $validator = $validator->claim(new CHashChecker($this->code, $alg ?: ''));
         }
 
         if (null !== $this->state) {
-            $validator = $validator->claim('s_hash', new SHashChecker($this->state, $alg ?: ''));
+            $validator = $validator->claim(new SHashChecker($this->state, $alg ?: ''));
         }
 
         $validator = $validator->mandatory($requiredClaims);
