@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\ClaimChecker;
+namespace Facile\JoseVerifier\Checker;
 
 use function is_int;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use function time;
 
+/**
+ * @internal
+ */
 final class AuthTimeChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'auth_time';
@@ -26,7 +29,7 @@ final class AuthTimeChecker implements ClaimChecker
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      */
     public function checkClaim($value): void
     {

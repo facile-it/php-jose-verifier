@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifierTest\ClaimChecker;
 
-use Facile\JoseVerifier\ClaimChecker\AuthTimeChecker;
+use Facile\JoseVerifier\Checker\AuthTimeChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
 use function time;

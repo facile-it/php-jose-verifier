@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\ClaimChecker;
+namespace Facile\JoseVerifier\Checker;
 
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use function sprintf;
 
+/**
+ * @internal
+ */
 final class AzpChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'azp';
@@ -21,7 +24,7 @@ final class AzpChecker implements ClaimChecker
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      */
     public function checkClaim($value): void
     {

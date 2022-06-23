@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifierTest\ClaimChecker;
 
-use Facile\JoseVerifier\ClaimChecker\SHashChecker;
+use Facile\JoseVerifier\Checker\SHashChecker;
 use Jose\Component\Checker\ClaimChecker;
 
 class SHashCheckerTest extends AbstractHashCheckerTest

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use Facile\JoseVerifier\ClaimChecker\AtHashChecker;
-use Facile\JoseVerifier\ClaimChecker\CHashChecker;
-use Facile\JoseVerifier\ClaimChecker\SHashChecker;
+use Facile\JoseVerifier\Checker\AtHashChecker;
+use Facile\JoseVerifier\Checker\CHashChecker;
+use Facile\JoseVerifier\Checker\SHashChecker;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 use InvalidArgumentException;
 use Jose\Component\Signature\Serializer\CompactSerializer;
-use Jose\Easy\Validate;
 use Throwable;
 
 /**
@@ -95,11 +94,10 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
             $validator = $validator->claim('s_hash', new SHashChecker($this->state, $alg ?: ''));
         }
 
-        /** @var Validate $validator */
         $validator = $validator->mandatory($requiredClaims);
 
         try {
-            return $validator->run()->claims->all();
+            return $validator->run();
         } catch (Throwable $e) {
             throw $this->processException($e);
         }
