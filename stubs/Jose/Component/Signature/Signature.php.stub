@@ -9,13 +9,25 @@ use InvalidArgumentException;
 use Facile\JoseVerifier\Psalm\PsalmTypes;
 
 /**
- * @psalm-import-type JWTHeaderObject from PsalmTypes
+ * @psalm-type JWTHeaderType = array{alg?: non-empty-string,
+ *     enc?: non-empty-string,
+ *     jku?: non-empty-string,
+ *     jwk?: non-empty-string,
+ *     kid?: non-empty-string,
+ *     x5u?: non-empty-string,
+ *     x5c?: non-empty-string,
+ *     x5t?: non-empty-string,
+ *     "x5t#S256"?: non-empty-string,
+ *     typ?: non-empty-string,
+ *     cty?: non-empty-string,
+ *     crit?: non-empty-string
+ * }
  */
 class Signature
 {
     /**
-     * @param JWTHeaderObject $protectedHeader
-     * @param JWTHeaderObject $header
+     * @param JWTHeaderType $protectedHeader
+     * @param JWTHeaderType $header
      */
     public function __construct(string $signature, array $protectedHeader, ?string $encodedProtectedHeader, array $header)
     {
@@ -24,7 +36,7 @@ class Signature
     /**
      * The protected header associated with the signature.
      *
-     * @return JWTHeaderObject
+     * @return JWTHeaderType
      */
     public function getProtectedHeader(): array
     {
@@ -33,7 +45,7 @@ class Signature
     /**
      * The unprotected header associated with the signature.
      *
-     * @return JWTHeaderObject
+     * @return JWTHeaderType
      */
     public function getHeader(): array
     {

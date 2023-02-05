@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\Decrypter;
+namespace Facile\JoseVerifier\Test\Decrypter;
 
 use Facile\JoseVerifier\Decrypter\TokenDecrypter;
 use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
-use Facile\JoseVerifierTest\AbstractJwtTestCase;
+use Facile\JoseVerifier\Test\AbstractJwtTestCase;
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Encryption\Algorithm\ContentEncryption\A128GCM;

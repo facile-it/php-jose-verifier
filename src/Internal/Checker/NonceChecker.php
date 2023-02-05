@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\Checker;
+namespace Facile\JoseVerifier\Internal\Checker;
 
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
@@ -15,8 +15,7 @@ final class NonceChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'nonce';
 
-    /** @var string */
-    private $nonce;
+    private string $nonce;
 
     public function __construct(string $nonce)
     {
@@ -25,6 +24,8 @@ final class NonceChecker implements ClaimChecker
 
     /**
      * @param mixed $value
+     *
+     * @throws InvalidClaimException
      */
     public function checkClaim($value): void
     {

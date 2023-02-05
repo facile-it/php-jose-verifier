@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest;
+namespace Facile\JoseVerifier\Test;
 
-use Facile\JoseVerifier\AbstractTokenVerifierBuilder;
+use Facile\JoseVerifier\Builder\AbstractTokenVerifierBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
@@ -14,7 +14,7 @@ use ReflectionClass;
 
 abstract class AbstractVerifierBuilderTestCase extends TestCase
 {
-    abstract protected function getBuilder(): AbstractTokenVerifierBuilder;
+    abstract protected function getBuilder(array $issuerMetadata, array $clientMetadata): AbstractTokenVerifierBuilder;
 
     abstract protected function getExpectedVerifierClass(): string;
 
@@ -39,9 +39,7 @@ abstract class AbstractVerifierBuilderTestCase extends TestCase
             'client_id' => 'client-id',
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata);
 
         $verifier = $builder->build();
 
@@ -66,10 +64,8 @@ abstract class AbstractVerifierBuilderTestCase extends TestCase
             'jwks' => $issuerJwks,
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
-        $builder->setJwksProvider(new MemoryJwksProvider($issuerJwks));
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata)
+            ->withJwksProvider(new MemoryJwksProvider($issuerJwks));
 
         $verifier = $builder->build();
 
@@ -98,11 +94,9 @@ abstract class AbstractVerifierBuilderTestCase extends TestCase
             'jwks' => $issuerJwks,
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
-        $builder->setClockTolerance(6);
-        $builder->setAadIssValidation(true);
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata)
+            ->withClockTolerance(6)
+            ->withAadIssValidation(true);
 
         $verifier = $builder->build();
 

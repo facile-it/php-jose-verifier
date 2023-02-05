@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\Checker;
+namespace Facile\JoseVerifier\Internal\Checker;
 
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
@@ -15,8 +15,7 @@ final class AzpChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'azp';
 
-    /** @var string */
-    private $azp;
+    private string $azp;
 
     public function __construct(string $azp)
     {
@@ -25,6 +24,8 @@ final class AzpChecker implements ClaimChecker
 
     /**
      * @param mixed $value
+     *
+     * @throws InvalidClaimException
      */
     public function checkClaim($value): void
     {

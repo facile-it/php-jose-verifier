@@ -5,36 +5,27 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\JWK;
 
 /**
- * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ * @psalm-import-type JWKSetType from JwksProviderInterface
  */
-class MemoryJwksProvider implements JwksProviderInterface
+final class MemoryJwksProvider implements JwksProviderInterface
 {
-    /**
-     * @var array
-     * @psalm-var JWKSetObject
-     */
-    private $jwks;
+    /** @psalm-var JWKSetType */
+    private array $jwks;
 
     /**
-     * @psalm-param JWKSetObject $jwks
+     * @psalm-param JWKSetType $jwks
      */
     public function __construct(array $jwks = ['keys' => []])
     {
         $this->jwks = $jwks;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getJwks(): array
     {
         return $this->jwks;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function reload(): JwksProviderInterface
+    public function reload(): static
     {
         return $this;
     }

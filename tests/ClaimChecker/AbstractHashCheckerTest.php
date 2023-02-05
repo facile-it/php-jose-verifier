@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\ClaimChecker;
+namespace Facile\JoseVerifier\Test\ClaimChecker;
 
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\Validate;
+namespace Facile\JoseVerifier\Test\Validate;
 
-use Facile\JoseVerifier\Checker\CallableChecker;
+use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
 use Facile\JoseVerifier\Exception\RuntimeException;
-use Facile\JoseVerifier\Validate\Validate;
-use Facile\JoseVerifierTest\AbstractJwtTestCase;
+use Facile\JoseVerifier\Internal\Validate;
+use Facile\JoseVerifier\Test\AbstractJwtTestCase;
+use Facile\JoseVerifier\Test\ClaimChecker\CallableChecker;
 use Jose\Component\Checker\AlgorithmChecker;
-use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\InvalidHeaderException;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\KeyManagement\JWKFactory;
@@ -65,8 +65,8 @@ class ValidateTest extends AbstractJwtTestCase
     {
         $payload = $this->createPayload();
         $token = $this->generateTokenWithPayload($payload);
-        $baseValidator = Validate::token($token);
-        $validator = $baseValidator->keyset($this->jwks);
+        $baseValidator = Validate::withToken($token);
+        $validator = $baseValidator->withJWKSet($this->jwks);
 
         $this->assertNotSame($validator, $baseValidator);
         $this->assertSame($payload, $validator->run());
@@ -75,16 +75,16 @@ class ValidateTest extends AbstractJwtTestCase
     public function testShouldValidateSignatureFail(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Invalid signature');
+        $this->expectExceptionMessage('Invalid token signature');
 
         $payload = $this->createPayload();
         $token = $this->generateTokenWithPayload($payload);
-        $baseValidator = Validate::token($token);
+        $baseValidator = Validate::withToken($token);
 
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = JWKSet::createFromKeyData(['keys' => [$jwk->toPublic()->all()]]);
 
-        $validator = $baseValidator->keyset($jwks);
+        $validator = $baseValidator->withJWKSet($jwks);
 
         $this->assertNotSame($validator, $baseValidator);
         $validator->run();
@@ -94,9 +94,9 @@ class ValidateTest extends AbstractJwtTestCase
     {
         $payload = $this->createPayload();
         $token = $this->generateTokenWithPayload($payload);
-        $baseValidator = Validate::token($token)
-            ->keyset($this->jwks);
-        $validator = $baseValidator->claim(new CallableChecker('aud', static function () {
+        $baseValidator = Validate::withToken($token)
+            ->withJWKSet($this->jwks);
+        $validator = $baseValidator->withClaim(new CallableChecker('aud', static function () {
             return true;
         }));
 
@@ -106,13 +106,13 @@ class ValidateTest extends AbstractJwtTestCase
 
     public function testShouldValidateClaimFail(): void
     {
-        $this->expectException(InvalidClaimException::class);
+        $this->expectException(InvalidTokenClaimException::class);
 
         $payload = $this->createPayload();
         $token = $this->generateTokenWithPayload($payload);
-        $baseValidator = Validate::token($token)
-            ->keyset($this->jwks);
-        $validator = $baseValidator->claim(new CallableChecker('aud', static function () {
+        $baseValidator = Validate::withToken($token)
+            ->withJWKSet($this->jwks);
+        $validator = $baseValidator->withClaim(new CallableChecker('aud', static function () {
             return false;
         }));
 
@@ -124,9 +124,9 @@ class ValidateTest extends AbstractJwtTestCase
     {
         $payload = $this->createPayload();
         $token = $this->generateTokenWithPayload($payload);
-        $baseValidator = Validate::token($token)
-            ->keyset($this->jwks);
-        $validator = $baseValidator->header(new AlgorithmChecker(['foo', 'RS256']));
+        $baseValidator = Validate::withToken($token)
+            ->withJWKSet($this->jwks);
+        $validator = $baseValidator->withHeader(new AlgorithmChecker(['foo', 'RS256']));
 
         $this->assertNotSame($validator, $baseValidator);
         $this->assertSame($payload, $validator->run());
@@ -138,9 +138,9 @@ class ValidateTest extends AbstractJwtTestCase
 
         $payload = $this->createPayload();
         $token = $this->generateTokenWithPayload($payload);
-        $baseValidator = Validate::token($token)
-            ->keyset($this->jwks);
-        $validator = $baseValidator->header(new AlgorithmChecker(['foo', 'bar']));
+        $baseValidator = Validate::withToken($token)
+            ->withJWKSet($this->jwks);
+        $validator = $baseValidator->withHeader(new AlgorithmChecker(['foo', 'bar']));
 
         $this->assertNotSame($validator, $baseValidator);
         $validator->run();

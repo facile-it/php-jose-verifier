@@ -31,7 +31,7 @@
         "access token"
     ],
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
         "psr/http-client": "^1.0",
@@ -47,8 +47,8 @@
     },
     "autoload": {
         "files": [
-            "src/functions/derived_key.php",
-            "src/functions/jose_secret_key.php"
+            "src/Internal/functions/derived_key.php",
+            "src/Internal/functions/jose_secret_key.php"
         ],
         "psr-4": {
             "Facile\\JoseVerifier\\": "src/"
@@ -56,7 +56,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Facile\\JoseVerifierTest\\": "tests/"
+            "Facile\\JoseVerifier\\Test\\": "tests/"
         }
     },
     "require-dev": {
@@ -65,8 +65,8 @@
         "laminas/laminas-diactoros": "^2.2",
         "php-http/curl-client": "^2.1",
         "phpspec/prophecy-phpunit": "^1.1 || ^2.0",
-        "phpunit/phpunit": "^8.5.14 || ^9.3",
-        "vimeo/psalm": "^4.23",
+        "phpunit/phpunit": "^9.6",
+        "vimeo/psalm": "^5.6.0",
         "web-token/jwt-encryption": "^2.2.0 || ^3.0",
         "web-token/jwt-encryption-algorithm-aescbc": "^2.2.0 || ^3.0",
         "web-token/jwt-encryption-algorithm-aesgcm": "^2.2.0 || ^3.0",

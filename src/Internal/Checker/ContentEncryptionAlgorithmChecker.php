@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\Checker;
+namespace Facile\JoseVerifier\Internal\Checker;
 
 use Jose\Component\Checker\HeaderChecker;
 use Jose\Component\Checker\InvalidHeaderException;
@@ -17,11 +17,10 @@ final class ContentEncryptionAlgorithmChecker implements HeaderChecker
 {
     private const HEADER_NAME = 'enc';
 
-    /** @var bool */
-    private $protectedHeader;
+    private bool $protectedHeader;
 
     /** @var string[] */
-    private $supportedAlgorithms;
+    private array $supportedAlgorithms;
 
     /**
      * @param string[] $supportedAlgorithms

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest;
+namespace Facile\JoseVerifier\Test;
 
 use Base64Url\Base64Url;
 use Exception;
@@ -478,7 +478,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
     public function testShouldFailWithAsyKeyAndNoSecret(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Unable to verify token without client_secret');
+        $this->expectExceptionMessage('Signature requires client_secret to be verified');
 
         $clientSecret = Base64Url::encode(random_bytes(32));
         $jwk = jose_secret_key($clientSecret);

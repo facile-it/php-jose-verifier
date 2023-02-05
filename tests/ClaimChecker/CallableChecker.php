@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\Checker;
+namespace Facile\JoseVerifier\Test\ClaimChecker;
 
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\HeaderChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\InvalidHeaderException;
 
-/**
- * @internal
- */
 final class CallableChecker implements ClaimChecker, HeaderChecker
 {
     /** @var string */
@@ -19,6 +16,7 @@ final class CallableChecker implements ClaimChecker, HeaderChecker
 
     /**
      * @var callable
+     *
      * @psalm-var callable(mixed): bool
      */
     private $callable;

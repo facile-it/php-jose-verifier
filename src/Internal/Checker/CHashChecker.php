@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\Checker;
+namespace Facile\JoseVerifier\Internal\Checker;
 
 /**
  * @internal
  */
-final class SHashChecker extends AbstractHashChecker
+final class CHashChecker extends AbstractHashChecker
 {
-    private const CLAIM_NAME = 's_hash';
+    private const CLAIM_NAME = 'c_hash';
 
     public function supportedClaim(): string
     {

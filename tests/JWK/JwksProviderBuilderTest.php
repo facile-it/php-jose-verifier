@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\JWK;
+namespace Facile\JoseVerifier\Test\JWK;
 
-use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Facile\JoseVerifier\JWK\CachedJwksProvider;
 use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
@@ -45,11 +44,10 @@ class JwksProviderBuilderTest extends TestCase
     public function testShouldCreateStaticProviderWithJwks(): void
     {
         $jwks = ['keys' => [
-            ['foo' => 'bar'],
+            ['kid' => 'foo'],
         ]];
         $builder = new JwksProviderBuilder();
-        $builder->setJwks($jwks);
-        $provider = $builder->build();
+        $provider = $builder->withJwks($jwks)->build();
 
         $this->assertInstanceOf(MemoryJwksProvider::class, $provider);
         $this->assertSame($jwks, $provider->getJwks());
@@ -58,9 +56,8 @@ class JwksProviderBuilderTest extends TestCase
     public function testShouldCreateRemoteProviderWithJwksUri(): void
     {
         $builder = new JwksProviderBuilder();
-        $builder->setJwksUri('https://jwks_uri');
 
-        $provider = $builder->build();
+        $provider = $builder->withJwksUri('https://jwks_uri')->build();
 
         $this->assertInstanceOf(RemoteJwksProvider::class, $provider);
         $this->assertSame('https://jwks_uri', $this->getPropertyValue($provider, 'uri'));
@@ -72,9 +69,9 @@ class JwksProviderBuilderTest extends TestCase
         $requestFactory = $this->prophesize(RequestFactoryInterface::class);
 
         $builder = new JwksProviderBuilder();
-        $builder->setJwksUri('https://jwks_uri');
-        $builder->setHttpClient($httpClient->reveal());
-        $builder->setRequestFactory($requestFactory->reveal());
+        $builder = $builder->withJwksUri('https://jwks_uri');
+        $builder = $builder->withHttpClient($httpClient->reveal());
+        $builder = $builder->withRequestFactory($requestFactory->reveal());
 
         $provider = $builder->build();
 
@@ -89,8 +86,8 @@ class JwksProviderBuilderTest extends TestCase
         $cache = $this->prophesize(CacheInterface::class);
 
         $builder = new JwksProviderBuilder();
-        $builder->setJwksUri('https://jwks_uri');
-        $builder->setCache($cache->reveal());
+        $builder = $builder->withJwksUri('https://jwks_uri');
+        $builder = $builder->withCache($cache->reveal());
 
         $provider = $builder->build();
 
@@ -113,23 +110,13 @@ class JwksProviderBuilderTest extends TestCase
         $cache = $this->prophesize(CacheInterface::class);
 
         $builder = new JwksProviderBuilder();
-        $builder->setJwksUri('https://jwks_uri');
-        $builder->setCache($cache->reveal());
-        $builder->setCacheTtl(5);
+        $builder = $builder->withJwksUri('https://jwks_uri');
+        $builder = $builder->withCache($cache->reveal());
+        $builder = $builder->withCacheTtl(5);
 
         $provider = $builder->build();
 
         $this->assertInstanceOf(CachedJwksProvider::class, $provider);
         $this->assertSame(5, $this->getPropertyValue($provider, 'ttl'));
-    }
-
-    public function testShouldThrowErrorWithBothJwksAndJwksUri(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $builder = new JwksProviderBuilder();
-        $builder->setJwks(['keys' => []]);
-        $builder->setJwksUri('https://jwks_uri');
-        $builder->build();
     }
 }

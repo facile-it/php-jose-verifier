@@ -8,18 +8,19 @@ use ArrayIterator;
 use Countable;
 use InvalidArgumentException;
 use IteratorAggregate;
+use Jose\Component\Signature\Signature;
 use JsonSerializable;
 use Traversable;
 use Facile\JoseVerifier\Psalm\PsalmTypes;
 
 /**
  * @implements IteratorAggregate<mixed, mixed>
- * @psalm-import-type JWKSetObject from PsalmTypes
+ * @psalm-import-type JWTHeaderType from Signature
  */
 class JWKSet implements Countable, IteratorAggregate, JsonSerializable
 {
     /**
-     * @return JWKSetObject
+     * @return JWTHeaderType
      */
     public function jsonSerialize(): array
     {}
