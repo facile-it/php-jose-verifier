@@ -33,8 +33,10 @@ class InvalidTokenClaimException extends InvalidTokenException
 
     /**
      * Returns the claim value that caused the exception.
+     *
+     * @return mixed
      */
-    public function getValue(): mixed
+    public function getValue()
     {
         return $this->value;
     }

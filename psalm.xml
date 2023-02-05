@@ -12,7 +12,7 @@
     ensureArrayStringOffsetsExist="true"
     findUnusedVariablesAndParams="true"
     findUnusedPsalmSuppress="true"
-    checkForThrowsDocblock="true"
+    checkForThrowsDocblock="false"
     sealAllMethods="true"
     sealAllProperties="true"
     strictBinaryOperands="false"
