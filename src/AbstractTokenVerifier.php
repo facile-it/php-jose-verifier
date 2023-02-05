@@ -23,6 +23,8 @@ use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Signature\Serializer\CompactSerializer;
+use InvalidArgumentException;
+use RuntimeException;
 use function str_replace;
 use function strpos;
 
@@ -202,13 +204,13 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     {
         try {
             $jws = (new CompactSerializer())->unserialize($jwt);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new InvalidTokenException('Invalid JWT provided', 0, $e);
         }
 
         try {
             $payload = JsonConverter::decode($jws->getPayload() ?? '{}');
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             throw new InvalidTokenException('Unable to decode JWT payload', 0, $e);
         }
 
@@ -227,7 +229,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     {
         try {
             $jws = (new CompactSerializer())->unserialize($jwt);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new InvalidTokenException('Invalid JWT provided', 0, $e);
         }
 
