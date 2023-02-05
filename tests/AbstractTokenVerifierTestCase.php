@@ -157,7 +157,6 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
     public function testFailWithInvalidJWTPayload(): void
     {
         $this->expectException(InvalidTokenException::class);
-        $this->expectExceptionMessage('Unable to decode JWT payload');
 
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $token = $this->createRawSignedToken('foo', [

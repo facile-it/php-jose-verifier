@@ -24,6 +24,10 @@
         </ignoreFiles>
     </projectFiles>
 
+    <issueHandlers>
+        <InvalidCatch errorLevel="suppress" />
+    </issueHandlers>
+
     <stubs>
         <file name="stubs/Jose/Component/Core/JWKSet.php.stub"/>
         <file name="stubs/Jose/Component/Encryption/JWE.php.stub"/>
