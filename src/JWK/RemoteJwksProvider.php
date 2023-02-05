@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
-use Psr\Http\Client\ClientExceptionInterface;
 use function array_key_exists;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use function is_array;
 use function json_decode;
+use JsonException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
@@ -16,6 +17,7 @@ use Psr\Http\Message\RequestFactoryInterface;
  * Provide a {@see JwksProviderInterface} to fetch JWKSet from a remote location.
  *
  * @psalm-api
+ *
  * @psalm-import-type JWKSetType from JwksProviderInterface
  */
 final class RemoteJwksProvider implements JwksProviderInterface
@@ -78,8 +80,8 @@ final class RemoteJwksProvider implements JwksProviderInterface
 
         try {
             /** @var mixed $data */
-            $data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
             throw new RuntimeException('Unable to decode response payload', 0, $e);
         }
 
@@ -93,6 +95,7 @@ final class RemoteJwksProvider implements JwksProviderInterface
 
     /**
      * @param mixed $data
+     *
      * @psalm-assert-if-true JWKSetType $data
      */
     private function isJWKSet($data): bool

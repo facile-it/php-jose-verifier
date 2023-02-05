@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
-use Facile\JoseVerifier\Exception\RuntimeException;
-
 /**
  * @psalm-type JWKType = array{
  *     kty: "RSA"|"EC"|"oct"|string,
@@ -43,8 +41,6 @@ interface JwksProviderInterface
 
     /**
      * Require reload keys from source
-     *
-     * @return static
      */
     public function reload(): static;
 }

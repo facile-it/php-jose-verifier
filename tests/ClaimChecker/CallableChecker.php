@@ -16,6 +16,7 @@ final class CallableChecker implements ClaimChecker, HeaderChecker
 
     /**
      * @var callable
+     *
      * @psalm-var callable(mixed): bool
      */
     private $callable;

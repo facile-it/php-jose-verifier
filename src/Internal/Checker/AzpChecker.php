@@ -23,8 +23,9 @@ final class AzpChecker implements ClaimChecker
     }
 
     /**
-     * @throws InvalidClaimException
      * @param mixed $value
+     *
+     * @throws InvalidClaimException
      */
     public function checkClaim($value): void
     {

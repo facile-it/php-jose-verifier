@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Decrypter;
 
+use function class_exists;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Exception\LogicException;
 use Facile\JoseVerifier\Internal\Checker\ContentEncryptionAlgorithmChecker;
+use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Jose\Component\Checker\AlgorithmChecker;
@@ -23,10 +25,8 @@ use Jose\Component\Encryption\JWELoader;
 use Jose\Component\Encryption\JWETokenSupport;
 use Jose\Component\Encryption\Serializer\CompactSerializer;
 use Jose\Component\Encryption\Serializer\JWESerializerManager;
-use Throwable;
-use function class_exists;
-use function Facile\JoseVerifier\jose_secret_key;
 use function preg_match;
+use Throwable;
 
 final class TokenDecrypter implements TokenDecrypterInterface
 {
@@ -150,6 +150,7 @@ final class TokenDecrypter implements TokenDecrypterInterface
 
     /**
      * @return string[]
+     *
      * @psalm-return list<class-string<Algorithm>>
      */
     protected function getAlgorithmMap(): array

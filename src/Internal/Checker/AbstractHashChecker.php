@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\Internal\Checker;
 
 use Base64Url\Base64Url;
+use function hash;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
-use function hash;
 use function round;
 use function sprintf;
 use function strlen;
@@ -46,8 +46,9 @@ abstract class AbstractHashChecker implements ClaimChecker
     }
 
     /**
-     * @throws InvalidClaimException
      * @param mixed $value
+     *
+     * @throws InvalidClaimException
      */
     public function checkClaim($value): void
     {

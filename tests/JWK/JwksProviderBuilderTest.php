@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\JWK;
 
-use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Facile\JoseVerifier\JWK\CachedJwksProvider;
 use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;

@@ -10,7 +10,6 @@ use Facile\JoseVerifier\Internal\Validate;
 use Facile\JoseVerifier\Test\AbstractJwtTestCase;
 use Facile\JoseVerifier\Test\ClaimChecker\CallableChecker;
 use Jose\Component\Checker\AlgorithmChecker;
-use Jose\Component\Checker\InvalidClaimException;
 use Jose\Component\Checker\InvalidHeaderException;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\KeyManagement\JWKFactory;

@@ -15,23 +15,28 @@ use Facile\JoseVerifier\TokenVerifierInterface;
 
 /**
  * @psalm-api
+ *
  * @psalm-import-type JWKSetType from JwksProviderInterface
  * @psalm-import-type ClientMetadataType from TokenVerifierInterface
+ *
  * @psalm-type IssuerMetadataType = array{}&array{issuer: string, jwks_uri: string}
  *
  * @template TVerifier of AbstractTokenVerifier
+ *
  * @template-implements TokenVerifierBuilderInterface<TVerifier>
  */
 abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInterface
 {
     /**
      * @var array<string, mixed>
+     *
      * @psalm-var ClientMetadataType
      */
     protected array $clientMetadata;
 
     /**
      * @var array<string, mixed>
+     *
      * @psalm-var IssuerMetadataType
      */
     protected array $issuerMetadata;
@@ -60,6 +65,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     {
         $new = clone $this;
         $new->clockTolerance = $clockTolerance;
+
         return $new;
     }
 
@@ -67,6 +73,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     {
         $new = clone $this;
         $new->aadIssValidation = $aadIssValidation;
+
         return $new;
     }
 
@@ -74,6 +81,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     {
         $new = clone $this;
         $new->jwksProvider = $jwksProvider;
+
         return $new;
     }
 
@@ -81,6 +89,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     {
         $new = clone $this;
         $new->clientJwksProvider = $clientJwksProvider;
+
         return $new;
     }
 
@@ -114,6 +123,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     {
         $new = clone $this;
         $new->jwksProviderBuilder = $jwksProviderBuilder;
+
         return $new;
     }
 
@@ -132,6 +142,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
      * @throws InvalidArgumentException
      *
      * @return array<string, mixed>
+     *
      * @psalm-return ClientMetadataType
      */
     protected function getClientMetadata(): array
@@ -143,6 +154,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
      * @throws InvalidArgumentException
      *
      * @return array<string, mixed>
+     *
      * @psalm-return IssuerMetadataType
      */
     protected function getIssuerMetadata(): array
@@ -152,6 +164,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
 
     /**
      * @throws InvalidArgumentException
+     *
      * @psalm-return TVerifier
      */
     public function build(): TokenVerifierInterface

@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier;
 
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
-use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
-use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\Internal\Checker\AuthTimeChecker;
 use Facile\JoseVerifier\Internal\Checker\AzpChecker;
 use Facile\JoseVerifier\Internal\Checker\NonceChecker;
 use Facile\JoseVerifier\Internal\Validate;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
+use function is_array;
 use Jose\Component\Checker\AlgorithmChecker;
 use Jose\Component\Checker\AudienceChecker;
 use Jose\Component\Checker\ExpirationTimeChecker;
@@ -24,13 +23,12 @@ use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Signature\Serializer\CompactSerializer;
-use Throwable;
-use function is_array;
 use function str_replace;
 use function strpos;
 
 /**
  * @psalm-api
+ *
  * @psalm-import-type JWTPayloadType from TokenVerifierInterface
  */
 abstract class AbstractTokenVerifier implements TokenVerifierInterface
@@ -114,7 +112,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
 
         return $new;
     }
-    
+
     public function withClockTolerance(int $clockTolerance): static
     {
         $new = clone $this;
@@ -195,6 +193,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
 
     /**
      * @throws InvalidTokenException When unable to decode JWT payload
+     *
      * @return array<string, mixed>
      *
      * @psalm-return JWTPayloadType

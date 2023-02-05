@@ -9,8 +9,10 @@ use Facile\JoseVerifier\TokenVerifierInterface;
 
 /**
  * @psalm-api
+ *
  * @psalm-import-type ClientMetadataType from TokenVerifierInterface
  * @psalm-import-type IssuerMetadataType from TokenVerifierInterface
+ *
  * @template TVerifier of TokenVerifierInterface
  */
 interface TokenVerifierBuilderInterface

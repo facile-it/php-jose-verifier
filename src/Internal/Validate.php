@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Internal;
 
-use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
-use Facile\JoseVerifier\Exception\RuntimeException;
 use Jose\Component\Checker;
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWKSet;
@@ -16,6 +14,7 @@ use Jose\Component\Signature\Algorithm;
 use Jose\Component\Signature\JWSTokenSupport;
 use Jose\Component\Signature\JWSVerifier;
 use Jose\Component\Signature\Serializer\CompactSerializer;
+use JsonException;
 use Throwable;
 
 /**
@@ -81,7 +80,7 @@ final class Validate
         try {
             /** @var array<string, mixed> $claims */
             $claims = JsonConverter::decode($jws->getPayload() ?? '{}');
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             throw new InvalidTokenException('Unable to decode JWT payload');
         }
 
@@ -96,7 +95,7 @@ final class Validate
             throw new InvalidTokenException($e->getMessage(), 0, $e);
         } catch (Checker\MissingMandatoryClaimException $e) {
             throw new InvalidTokenException($e->getMessage(), 0, $e);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidTokenException('An error occurred validating JWT', 0, $e);
         }
 
@@ -105,7 +104,9 @@ final class Validate
 
     /**
      * @return string[]
+     *
      * @psalm-return list<class-string<Algorithm\SignatureAlgorithm>>
+     *
      * @psalm-suppress UndefinedClass
      */
     private function getAlgorithmMap(): array

@@ -15,13 +15,12 @@ use function substr;
 
 /**
  * @psalm-api
+ *
  * @psalm-import-type JWKSetType from JwksProviderInterface
  */
 final class JwksProviderBuilder
 {
-    /**
-     * @psalm-var null|JWKSetType
-     */
+    /** @psalm-var null|JWKSetType */
     private ?array $jwks = null;
 
     private ?string $jwksUri = null;
@@ -33,7 +32,6 @@ final class JwksProviderBuilder
     private ?CacheInterface $cache = null;
 
     private ?int $cacheTtl = 86400;
-
 
     /**
      * @psalm-param JWKSetType $jwks

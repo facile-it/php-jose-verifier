@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Internal\Checker;
 
+use function is_int;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
-use function is_int;
 use function time;
 
 /**
@@ -27,8 +27,9 @@ final class AuthTimeChecker implements ClaimChecker
     }
 
     /**
-     * @throws InvalidClaimException
      * @param mixed $value
+     *
+     * @throws InvalidClaimException
      */
     public function checkClaim($value): void
     {

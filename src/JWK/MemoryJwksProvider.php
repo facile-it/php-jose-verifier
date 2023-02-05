@@ -9,9 +9,7 @@ namespace Facile\JoseVerifier\JWK;
  */
 final class MemoryJwksProvider implements JwksProviderInterface
 {
-    /**
-     * @psalm-var JWKSetType
-     */
+    /** @psalm-var JWKSetType */
     private array $jwks;
 
     /**

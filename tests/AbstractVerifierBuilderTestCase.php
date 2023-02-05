@@ -8,9 +8,9 @@ use Facile\JoseVerifier\Builder\AbstractTokenVerifierBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
+use function get_class;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use function get_class;
 
 abstract class AbstractVerifierBuilderTestCase extends TestCase
 {

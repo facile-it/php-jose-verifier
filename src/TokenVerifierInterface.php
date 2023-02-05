@@ -10,7 +10,9 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
 
 /**
  * @psalm-api
+ *
  * @psalm-import-type JWKSetType from JwksProviderInterface
+ *
  * @psalm-type JWTPayloadType = array<string, mixed>
  * @psalm-type OpenIdDisplayType = non-empty-string
  * @psalm-type OpenIdClaimType = 'normal'|'aggregated'|'distribuited'
@@ -135,6 +137,7 @@ interface TokenVerifierInterface
      * @throws InvalidTokenException When the JWT is not valid
      *
      * @return array The JWT Payload
+     *
      * @psalm-return JWTPayloadType
      */
     public function verify(string $jwt): array;

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use Throwable;
-
 final class UserInfoVerifier extends AbstractTokenVerifier
 {
     public function verify(string $jwt): array

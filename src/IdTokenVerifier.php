@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use Facile\JoseVerifier\Exception\InvalidArgumentException;
-use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
-use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\Internal\Checker\AtHashChecker;
 use Facile\JoseVerifier\Internal\Checker\CHashChecker;
 use Facile\JoseVerifier\Internal\Checker\SHashChecker;
 use Jose\Component\Signature\Serializer\CompactSerializer;
-use Throwable;
 
 final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVerifierInterface
 {
