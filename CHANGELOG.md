@@ -18,6 +18,7 @@ straightforward as possible.
 - Changed [`psalm`](https://psalm.dev) types
 - Changed builders to be immutable
 - Moved builders in `Facile\JoseVerifier\Builder` namespace
+- Immutable builders
 
 ### Fixed
 - Fixed check for mandatory `auth_time` when `require_auth_time` is `true`
