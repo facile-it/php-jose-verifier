@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest;
+namespace Facile\JoseVerifier\Test;
 
 use Facile\JoseVerifier\AbstractTokenVerifier;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
@@ -157,7 +157,7 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
     public function testFailWithInvalidJWTPayload(): void
     {
         $this->expectException(InvalidTokenException::class);
-        $this->expectExceptionMessage('Invalid token provided');
+        $this->expectExceptionMessage('Unable to decode JWT payload');
 
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $token = $this->createRawSignedToken('foo', [

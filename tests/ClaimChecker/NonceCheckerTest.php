@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\ClaimChecker;
+namespace Facile\JoseVerifier\Test\ClaimChecker;
 
-use Facile\JoseVerifier\Checker\NonceChecker;
+use Facile\JoseVerifier\Internal\Checker\NonceChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
 

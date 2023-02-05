@@ -14,74 +14,76 @@ use function sha1;
 use function substr;
 
 /**
- * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ * @psalm-api
+ * @psalm-import-type JWKSetType from JwksProviderInterface
  */
-class JwksProviderBuilder
+final class JwksProviderBuilder
 {
     /**
-     * @var array|null
-     * @psalm-var null|JWKSetObject
+     * @psalm-var null|JWKSetType
      */
-    private $jwks;
+    private ?array $jwks = null;
 
-    /** @var string|null */
-    private $jwksUri;
+    private ?string $jwksUri = null;
 
-    /** @var ClientInterface|null */
-    private $httpClient;
+    private ?ClientInterface $httpClient = null;
 
-    /** @var RequestFactoryInterface|null */
-    private $requestFactory;
+    private ?RequestFactoryInterface $requestFactory = null;
 
-    /** @var CacheInterface|null */
-    private $cache;
+    private ?CacheInterface $cache = null;
 
-    /** @var int|null */
-    private $cacheTtl = 86400;
+    private ?int $cacheTtl = 86400;
+
 
     /**
-     * @psalm-param JWKSetObject $jwks
+     * @psalm-param JWKSetType $jwks
      */
-    public function setJwks(array $jwks): self
+    public function withJwks(array $jwks): static
     {
-        $this->jwks = $jwks;
+        $new = clone $this;
+        $new->jwks = $jwks;
 
-        return $this;
+        return $new;
     }
 
-    public function setJwksUri(?string $jwksUri): self
+    public function withJwksUri(string $jwksUri): static
     {
-        $this->jwksUri = $jwksUri;
+        $new = clone $this;
+        $new->jwksUri = $jwksUri;
 
-        return $this;
+        return $new;
     }
 
-    public function setHttpClient(?ClientInterface $httpClient): self
+    public function withHttpClient(ClientInterface $httpClient): static
     {
-        $this->httpClient = $httpClient;
+        $new = clone $this;
+        $new->httpClient = $httpClient;
 
-        return $this;
+        return $new;
     }
 
-    public function setRequestFactory(?RequestFactoryInterface $requestFactory): self
+    public function withRequestFactory(RequestFactoryInterface $requestFactory): static
     {
-        $this->requestFactory = $requestFactory;
+        $new = clone $this;
+        $new->requestFactory = $requestFactory;
 
-        return $this;
+        return $new;
     }
 
-    public function setCache(?CacheInterface $cache): self
+    public function withCache(CacheInterface $cache): static
     {
-        $this->cache = $cache;
+        $new = clone $this;
+        $new->cache = $cache;
 
-        return $this;
+        return $new;
     }
 
-    public function setCacheTtl(?int $cacheTtl): self
+    public function withCacheTtl(int $cacheTtl): static
     {
-        $this->cacheTtl = $cacheTtl;
+        $new = clone $this;
+        $new->cacheTtl = $cacheTtl;
 
-        return $this;
+        return $new;
     }
 
     protected function buildRequestFactory(): RequestFactoryInterface
@@ -94,6 +96,9 @@ class JwksProviderBuilder
         return $this->httpClient ?? Psr18ClientDiscovery::find();
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function build(): JwksProviderInterface
     {
         if (null !== $this->jwks && null !== $this->jwksUri) {

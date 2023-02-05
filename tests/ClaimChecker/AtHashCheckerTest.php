@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\ClaimChecker;
+namespace Facile\JoseVerifier\Test\ClaimChecker;
 
-use Facile\JoseVerifier\Checker\AtHashChecker;
+use Facile\JoseVerifier\Internal\Checker\AtHashChecker;
 use Jose\Component\Checker\ClaimChecker;
 
 class AtHashCheckerTest extends AbstractHashCheckerTest

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
+use Facile\JoseVerifier\Exception\RuntimeException;
 use function is_array;
 use function is_string;
 use function json_decode;
@@ -11,21 +12,20 @@ use function json_encode;
 use Psr\SimpleCache\CacheInterface;
 
 /**
- * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ * Wrapper to provide cache feature for a {@see JwksProviderInterface}.
+ *
+ * @psalm-api
+ * @psalm-import-type JWKSetType from JwksProviderInterface
  */
-class CachedJwksProvider implements JwksProviderInterface
+final class CachedJwksProvider implements JwksProviderInterface
 {
-    /** @var JwksProviderInterface */
-    private $provider;
+    private JwksProviderInterface $provider;
 
-    /** @var CacheInterface */
-    private $cache;
+    private CacheInterface $cache;
 
-    /** @var string */
-    private $cacheKey;
+    private string $cacheKey;
 
-    /** @var null|int */
-    private $ttl;
+    private ?int $ttl;
 
     public function __construct(JwksProviderInterface $provider, CacheInterface $cache, string $cacheKey, ?int $ttl)
     {
@@ -36,16 +36,24 @@ class CachedJwksProvider implements JwksProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * @throws RuntimeException Whenever a runtime error occurred
      */
     public function getJwks(): array
     {
-        /** @var null|string $cached */
-        $cached = $this->cache->get($this->cacheKey);
+        try {
+            /** @var null|string $cached */
+            $cached = $this->cache->get($this->cacheKey);
+        } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
+            throw new RuntimeException('An error occurred fetching cached JWKSet', 0, $e);
+        }
 
         if (is_string($cached)) {
-            /** @var null|JWKSetObject $jwks */
-            $jwks = json_decode($cached, true);
+            try {
+                /** @var null|JWKSetType $jwks */
+                $jwks = json_decode($cached, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                throw new RuntimeException('Unable to decode cached JWKSet', 0, $e);
+            }
 
             if (is_array($jwks)) {
                 return $jwks;
@@ -53,17 +61,28 @@ class CachedJwksProvider implements JwksProviderInterface
         }
 
         $jwks = $this->provider->getJwks();
-        $this->cache->set($this->cacheKey, json_encode($jwks), $this->ttl);
+
+        try {
+            $this->cache->set($this->cacheKey, json_encode($jwks, JSON_THROW_ON_ERROR), $this->ttl);
+        } catch (\JsonException $e) {
+            throw new RuntimeException('Unable to encode JWKSet before cache', 0, $e);
+        } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
+            throw new RuntimeException('An error occurred saving JWKSet in cache', 0, $e);
+        }
 
         return $jwks;
     }
 
     /**
-     * @inheritDoc
+     * @throws RuntimeException
      */
-    public function reload(): JwksProviderInterface
+    public function reload(): static
     {
-        $this->cache->delete($this->cacheKey);
+        try {
+            $this->cache->delete($this->cacheKey);
+        } catch (\Psr\SimpleCache\InvalidArgumentException $e) {
+            throw new RuntimeException('An error occurred deleting JWKSet from cache', 0, $e);
+        }
 
         return $this;
     }

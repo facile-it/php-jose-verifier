@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
+use Psr\Http\Client\ClientExceptionInterface;
 use function array_key_exists;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use function is_array;
@@ -12,21 +13,21 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
 /**
- * @psalm-import-type JWKSetObject from \Facile\JoseVerifier\Psalm\PsalmTypes
+ * Provide a {@see JwksProviderInterface} to fetch JWKSet from a remote location.
+ *
+ * @psalm-api
+ * @psalm-import-type JWKSetType from JwksProviderInterface
  */
-class RemoteJwksProvider implements JwksProviderInterface
+final class RemoteJwksProvider implements JwksProviderInterface
 {
-    /** @var ClientInterface */
-    private $client;
+    private ClientInterface $client;
 
-    /** @var RequestFactoryInterface */
-    private $requestFactory;
+    private RequestFactoryInterface $requestFactory;
 
-    /** @var string */
-    private $uri;
+    private string $uri;
 
     /** @var array<string, string|string[]> */
-    private $headers;
+    private array $headers;
 
     /**
      * @param array<string, string|string[]> $headers
@@ -45,10 +46,8 @@ class RemoteJwksProvider implements JwksProviderInterface
 
     /**
      * @param array<string, string|string[]> $headers
-     *
-     * @return RemoteJwksProvider
      */
-    public function withHeaders(array $headers): self
+    public function withHeaders(array $headers): static
     {
         $new = clone $this;
         $new->headers = $headers;
@@ -57,9 +56,7 @@ class RemoteJwksProvider implements JwksProviderInterface
     }
 
     /**
-     * @inheritDoc
-     *
-     * @psalm-return JWKSetObject
+     * @throws RuntimeException Whenever a runtime error occurred
      */
     public function getJwks(): array
     {
@@ -69,17 +66,25 @@ class RemoteJwksProvider implements JwksProviderInterface
             $request = $request->withHeader($k, $v);
         }
 
-        $response = $this->client->sendRequest($request);
-
-        if ($response->getStatusCode() >= 400) {
-            throw new RuntimeException('Unable to get the key set.', $response->getStatusCode());
+        try {
+            $response = $this->client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            throw new RuntimeException('An error occurred fetching JWKSet', 0, $e);
         }
 
-        /** @var mixed $data */
-        $data = json_decode((string) $response->getBody(), true);
+        if ($response->getStatusCode() >= 400) {
+            throw new RuntimeException('Unable to get the key set', $response->getStatusCode());
+        }
+
+        try {
+            /** @var mixed $data */
+            $data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new RuntimeException('Unable to decode response payload', 0, $e);
+        }
 
         if ($this->isJWKSet($data)) {
-            /** @var JWKSetObject $data */
+            /** @var JWKSetType $data */
             return $data;
         }
 
@@ -88,17 +93,14 @@ class RemoteJwksProvider implements JwksProviderInterface
 
     /**
      * @param mixed $data
-     * @psalm-assert-if-true JWKSetObject $data
+     * @psalm-assert-if-true JWKSetType $data
      */
     private function isJWKSet($data): bool
     {
         return is_array($data) && array_key_exists('keys', $data) && is_array($data['keys']);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function reload(): JwksProviderInterface
+    public function reload(): static
     {
         return $this;
     }

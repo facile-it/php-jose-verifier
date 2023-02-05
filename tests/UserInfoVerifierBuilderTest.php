@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest;
+namespace Facile\JoseVerifier\Test;
 
-use Facile\JoseVerifier\AbstractTokenVerifierBuilder;
+use Facile\JoseVerifier\Builder\AbstractTokenVerifierBuilder;
+use Facile\JoseVerifier\Builder\UserInfoVerifierBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
 use Facile\JoseVerifier\UserInfoVerifier;
-use Facile\JoseVerifier\UserInfoVerifierBuilder;
 
 class UserInfoVerifierBuilderTest extends AbstractVerifierBuilderTestCase
 {
-    protected function getBuilder(): AbstractTokenVerifierBuilder
+    protected function getBuilder(array $issuerMetadata, array $clientMetadata): AbstractTokenVerifierBuilder
     {
-        return new UserInfoVerifierBuilder();
+        return UserInfoVerifierBuilder::create($issuerMetadata, $clientMetadata);
     }
 
     protected function getExpectedVerifierClass(): string
@@ -34,9 +34,7 @@ class UserInfoVerifierBuilderTest extends AbstractVerifierBuilderTestCase
             'userinfo_signed_response_alg' => 'sigAlg',
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata);
 
         $verifier = $builder->build();
 
@@ -63,9 +61,7 @@ class UserInfoVerifierBuilderTest extends AbstractVerifierBuilderTestCase
             'jwks' => $clientJwks,
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata);
 
         $verifier = $builder->build();
 

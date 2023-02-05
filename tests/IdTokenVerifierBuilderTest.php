@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest;
+namespace Facile\JoseVerifier\Test;
 
-use Facile\JoseVerifier\AbstractTokenVerifierBuilder;
+use Facile\JoseVerifier\Builder\AbstractTokenVerifierBuilder;
+use Facile\JoseVerifier\Builder\IdTokenVerifierBuilder;
 use Facile\JoseVerifier\IdTokenVerifier;
-use Facile\JoseVerifier\IdTokenVerifierBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
 
 class IdTokenVerifierBuilderTest extends AbstractVerifierBuilderTestCase
 {
-    protected function getBuilder(): AbstractTokenVerifierBuilder
+    protected function getBuilder(array $issuerMetadata, array $clientMetadata): AbstractTokenVerifierBuilder
     {
-        return new IdTokenVerifierBuilder();
+        return IdTokenVerifierBuilder::create($issuerMetadata, $clientMetadata);
     }
 
     protected function getExpectedVerifierClass(): string
@@ -34,9 +34,7 @@ class IdTokenVerifierBuilderTest extends AbstractVerifierBuilderTestCase
             'id_token_signed_response_alg' => 'sigAlg',
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata);
 
         $verifier = $builder->build();
 
@@ -63,9 +61,7 @@ class IdTokenVerifierBuilderTest extends AbstractVerifierBuilderTestCase
             'jwks' => $clientJwks,
         ];
 
-        $builder = $this->getBuilder();
-        $builder->setIssuerMetadata($issuerMetadata);
-        $builder->setClientMetadata($clientMetadata);
+        $builder = $this->getBuilder($issuerMetadata, $clientMetadata);
 
         $verifier = $builder->build();
 

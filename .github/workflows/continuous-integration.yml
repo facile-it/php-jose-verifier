@@ -20,11 +20,10 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.2"
-          - "7.3"
           - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
 
     steps:
       - name: "Checkout"
@@ -108,13 +107,14 @@ jobs:
           - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
         deps:
           - "lowest"
           - "latest"
         coverage:
           - "false"
         include:
-          - php-version: "8.1"
+          - php-version: "8.2"
             deps: "latest"
             coverage: "true"
 

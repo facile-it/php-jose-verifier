@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use Throwable;
+use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
+use Facile\JoseVerifier\Exception\InvalidTokenException;
 
 final class JWTVerifier extends AbstractTokenVerifier
 {
-    /**
-     * @inheritDoc
-     * @psalm-suppress MixedReturnTypeCoercion
-     */
     public function verify(string $jwt): array
     {
         $jwt = $this->decrypt($jwt);
         $validator = $this->create($jwt)
-            ->mandatory(['iss', 'sub', 'aud', 'exp', 'iat']);
+            ->withMandatory(['iss', 'sub', 'aud', 'exp', 'iat']);
 
-        try {
-            return $validator->run();
-        } catch (Throwable $e) {
-            throw $this->processException($e);
-        }
+        return $validator->run();
     }
 }

@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifier\Validate;
+namespace Facile\JoseVerifier\Internal;
 
+use Facile\JoseVerifier\Exception\InvalidArgumentException;
+use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
+use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use Jose\Component\Checker;
 use Jose\Component\Core\AlgorithmManager;
@@ -20,25 +23,23 @@ use Throwable;
  */
 final class Validate
 {
-    /** @var string */
-    protected $token;
+    private string $token;
 
-    /** @var JWKSet */
-    protected $jwkset;
+    private JWKSet $jwkset;
 
     /** @var Checker\HeaderChecker[] */
-    protected $headerCheckers = [];
+    private array $headerCheckers = [];
 
     /** @var Checker\ClaimChecker[] */
-    protected $claimCheckers = [];
+    private array $claimCheckers = [];
 
     /** @var \Jose\Component\Core\Algorithm[] */
-    protected $algorithms = [];
+    private array $algorithms = [];
 
     /** @var string[] */
-    protected $mandatoryClaims = [];
+    private array $mandatoryClaims = [];
 
-    protected function __construct(string $token)
+    private function __construct(string $token)
     {
         $this->token = $token;
         $this->jwkset = new JWKSet([]);
@@ -55,14 +56,14 @@ final class Validate
         }
     }
 
-    public static function token(string $token): self
+    public static function withToken(string $token): static
     {
-        return new self($token);
+        return new static($token);
     }
 
     /**
-     * @throws Checker\InvalidClaimException
-     * @throws Checker\MissingMandatoryClaimException
+     * @throws InvalidTokenClaimException When a JWT claim is not valid
+     * @throws InvalidTokenException When the JWT is not valid
      *
      * @return array<string, mixed>
      */
@@ -74,14 +75,30 @@ final class Validate
 
         $verifier = new JWSVerifier(new AlgorithmManager($this->algorithms));
         if (! $verifier->verifyWithKeySet($jws, $this->jwkset, 0)) {
-            throw new RuntimeException('Invalid signature');
+            throw new InvalidTokenException('Invalid token signature');
         }
 
-        /** @var array<string, mixed> $claims */
-        $claims = JsonConverter::decode($jws->getPayload() ?? '{}');
+        try {
+            /** @var array<string, mixed> $claims */
+            $claims = JsonConverter::decode($jws->getPayload() ?? '{}');
+        } catch (\JsonException $e) {
+            throw new InvalidTokenException('Unable to decode JWT payload');
+        }
 
         $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);
-        $claimChecker->check($claims, $this->mandatoryClaims);
+        try {
+            $claimChecker->check($claims, $this->mandatoryClaims);
+        } catch (Checker\InvalidHeaderException $e) {
+            throw new InvalidTokenException($e->getMessage(), 0, $e);
+        } catch (Checker\InvalidClaimException $e) {
+            throw new InvalidTokenClaimException($e->getMessage(), $e->getClaim(), $e->getValue(), $e);
+        } catch (Checker\MissingMandatoryHeaderParameterException $e) {
+            throw new InvalidTokenException($e->getMessage(), 0, $e);
+        } catch (Checker\MissingMandatoryClaimException $e) {
+            throw new InvalidTokenException($e->getMessage(), 0, $e);
+        } catch (\Throwable $e) {
+            throw new InvalidTokenException('An error occurred validating JWT', 0, $e);
+        }
 
         return $claims;
     }
@@ -90,10 +107,8 @@ final class Validate
      * @return string[]
      * @psalm-return list<class-string<Algorithm\SignatureAlgorithm>>
      * @psalm-suppress UndefinedClass
-     * @psalm-suppress InvalidReturnStatement
-     * @psalm-suppress InvalidReturnType
      */
-    protected function getAlgorithmMap(): array
+    private function getAlgorithmMap(): array
     {
         return [
             Algorithm\None::class,
@@ -116,7 +131,7 @@ final class Validate
     /**
      * @param string[] $mandatoryClaims
      */
-    public function mandatory(array $mandatoryClaims): self
+    public function withMandatory(array $mandatoryClaims): static
     {
         $clone = clone $this;
         $clone->mandatoryClaims = $mandatoryClaims;
@@ -124,7 +139,7 @@ final class Validate
         return $clone;
     }
 
-    public function claim(Checker\ClaimChecker $checker): self
+    public function withClaim(Checker\ClaimChecker $checker): static
     {
         $clone = clone $this;
 
@@ -133,7 +148,7 @@ final class Validate
         return $clone;
     }
 
-    public function header(Checker\HeaderChecker $checker): self
+    public function withHeader(Checker\HeaderChecker $checker): static
     {
         $clone = clone $this;
 
@@ -142,7 +157,7 @@ final class Validate
         return $clone;
     }
 
-    public function keyset(JWKSet $jwkset): self
+    public function withJWKSet(JWKSet $jwkset): static
     {
         $clone = clone $this;
         $clone->jwkset = $jwkset;

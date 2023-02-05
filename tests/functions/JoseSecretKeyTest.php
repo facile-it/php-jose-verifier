@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\functions;
+namespace Facile\JoseVerifier\Test\functions;
 
 use function Facile\JoseVerifier\jose_secret_key;
 use PHPUnit\Framework\TestCase;

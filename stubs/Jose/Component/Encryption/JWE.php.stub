@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jose\Component\Encryption;
 
+use Jose\Component\Signature\Signature;
 use function array_key_exists;
 use function count;
 use InvalidArgumentException;
@@ -11,13 +12,13 @@ use Jose\Component\Core\JWT;
 use Facile\JoseVerifier\Psalm\PsalmTypes;
 
 /**
- * @psalm-import-type JWTHeaderObject from PsalmTypes
+ * @psalm-import-type JWTHeaderType from Signature
  */
 class JWE implements JWT
 {
     /**
-     * @param JWTHeaderObject|array<empty, empty> $sharedHeader
-     * @param JWTHeaderObject|array<empty, empty> $sharedProtectedHeader
+     * @param JWTHeaderType|array<empty, empty> $sharedHeader
+     * @param JWTHeaderType|array<empty, empty> $sharedProtectedHeader
      * @param Recipient[] $recipients
      */
     public function __construct(string $ciphertext, string $iv, string $tag, ?string $aad = null, array $sharedHeader = [], array $sharedProtectedHeader = [], ?string $encodedSharedProtectedHeader = null, array $recipients = [])
@@ -77,7 +78,7 @@ class JWE implements JWT
     }
 
     /**
-     * @return JWTHeaderObject
+     * @return JWTHeaderType
      */
     public function getSharedProtectedHeader(): array
     {
@@ -97,7 +98,7 @@ class JWE implements JWT
     }
 
     /**
-     * @return JWTHeaderObject
+     * @return JWTHeaderType
      */
     public function getSharedHeader(): array
     {

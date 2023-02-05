@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Facile\JoseVerifierTest\JWK;
+namespace Facile\JoseVerifier\Test\JWK;
 
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use PHPUnit\Framework\TestCase;
