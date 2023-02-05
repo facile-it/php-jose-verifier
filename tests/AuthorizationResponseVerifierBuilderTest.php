@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test;
 
-use Facile\JoseVerifier\Builder\AbstractTokenVerifierBuilder;
 use Facile\JoseVerifier\Builder\AuthorizationResponseVerifierBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
@@ -13,7 +12,7 @@ use Facile\JoseVerifier\JWTVerifier;
 
 class AuthorizationResponseVerifierBuilderTest extends AbstractVerifierBuilderTestCase
 {
-    protected function getBuilder(array $issuerMetadata, array $clientMetadata): AbstractTokenVerifierBuilder
+    protected function getBuilder(array $issuerMetadata, array $clientMetadata): AuthorizationResponseVerifierBuilder
     {
         return AuthorizationResponseVerifierBuilder::create($issuerMetadata, $clientMetadata);
     }
@@ -38,6 +37,7 @@ class AuthorizationResponseVerifierBuilderTest extends AbstractVerifierBuilderTe
 
         $verifier = $builder->build();
 
+        $this->assertInstanceOf($this->getExpectedVerifierClass(), $verifier);
         $this->assertSame('sigAlg', $this->getPropertyValue($verifier, 'expectedAlg'));
     }
 

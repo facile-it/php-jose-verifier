@@ -6,9 +6,9 @@ namespace Facile\JoseVerifier\Test;
 
 use Base64Url\Base64Url;
 use Exception;
-use Facile\JoseVerifier\AbstractTokenVerifier;
-use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
+use Facile\JoseVerifier\Decrypter\NullTokenDecrypter;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
+use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
 use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWTVerifier;
@@ -18,12 +18,20 @@ use function time;
 
 class JWTVerifierTest extends AbstractTokenVerifierTestCase
 {
-    /**
-     * @return JWTVerifier
-     */
-    protected function buildVerifier(TokenDecrypterInterface $decrypter = null): AbstractTokenVerifier
+    protected function buildVerifier(): JWTVerifier
     {
-        return new JWTVerifier('https://issuer.com', 'client-id', $decrypter);
+        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwks = ['keys' => [$jwk->toPublic()->all()]];
+
+        return new JWTVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: $this->authTimeRequired,
+            expectedAlg: $this->expectedAlg,
+            clientSecret: $this->clientSecret,
+            jwksProvider: $this->jwksProvider ?? new MemoryJwksProvider($jwks),
+            decrypter: $this->tokenDecrypter ?? new NullTokenDecrypter(),
+        );
     }
 
     public function testShouldValidateToken(): void
@@ -44,11 +52,12 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
+        $this->authTimeRequired = true;
+        $this->expectedAlg = 'RS256';
+        $this->jwksProvider = new MemoryJwksProvider($jwks);
+
         $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
             ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
             ->verify($token);
 
         self::assertSame($payload, $result);
@@ -75,10 +84,10 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
         $jwk2 = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk2->toPublic()->all()]];
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withExpectedAlg('RS256')
-            ->verify($token);
+        $this->expectedAlg = 'RS256';
+        $this->jwksProvider = new MemoryJwksProvider($jwks);
+
+        $this->buildVerifier()->verify($token);
     }
 
     public function verifyTokenProvider(): array
@@ -223,7 +232,7 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
     public function testValidateTokenWithAsyKey(array $payload, bool $expected): void
     {
         if (! $expected) {
-            $this->expectException(InvalidTokenException::class);
+            $this->expectException(InvalidTokenExceptionInterface::class);
         }
 
         $clientSecret = Base64Url::encode(random_bytes(32));
@@ -233,12 +242,13 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
             'alg' => 'HS256',
         ], $jwk);
 
+        $this->authTimeRequired = true;
+        $this->expectedAlg = 'HS256';
+        $this->clientSecret = $clientSecret;
+        $this->jwksProvider = new MemoryJwksProvider();
+
         $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider())
-            ->withAuthTimeRequired(true)
             ->withNonce('nonce')
-            ->withClientSecret($clientSecret)
-            ->withExpectedAlg('HS256')
             ->verify($token);
 
         self::assertSame($payload, $result);

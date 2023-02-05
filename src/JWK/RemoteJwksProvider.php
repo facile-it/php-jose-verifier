@@ -12,6 +12,7 @@ use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Provide a {@see JwksProviderInterface} to fetch JWKSet from a remote location.
@@ -65,6 +66,7 @@ final class RemoteJwksProvider implements JwksProviderInterface
         $request = $this->requestFactory->createRequest('GET', $this->uri);
 
         foreach ($this->headers as $k => $v) {
+            /** @var RequestInterface $request */
             $request = $request->withHeader($k, $v);
         }
 

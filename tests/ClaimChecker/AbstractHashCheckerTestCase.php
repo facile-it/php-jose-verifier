@@ -9,7 +9,7 @@ use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
 use function sprintf;
 
-abstract class AbstractHashCheckerTest extends TestCase
+abstract class AbstractHashCheckerTestCase extends TestCase
 {
     protected const FOO_HASH_512 = '9_u6bgY2-JDlb7vzKD5STG-jIErimDgtYkdB0NxmODI';
 

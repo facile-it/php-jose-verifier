@@ -17,7 +17,29 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
 {
     use ProphecyTrait;
 
-    abstract protected function buildVerifier(TokenDecrypterInterface $decrypter = null): AbstractTokenVerifier;
+    protected bool $authTimeRequired = false;
+
+    protected ?string $expectedAlg = null;
+
+    protected ?string $expectedAzp = null;
+
+    protected ?string $clientSecret = null;
+
+    protected ?JwksProviderInterface $jwksProvider = null;
+
+    protected ?TokenDecrypterInterface $tokenDecrypter = null;
+
+    protected function setUp(): void
+    {
+        $this->authTimeRequired = false;
+        $this->expectedAlg = null;
+        $this->expectedAzp = null;
+        $this->clientSecret = null;
+        $this->jwksProvider = null;
+        $this->tokenDecrypter = null;
+    }
+
+    abstract protected function buildVerifier(): AbstractTokenVerifier;
 
     public function testShouldReloadJwksWhenKidNotFound(): void
     {
@@ -61,11 +83,12 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
             return $jwksProvider->reveal();
         });
 
+        $this->authTimeRequired = true;
+        $this->expectedAlg = 'RS256';
+        $this->jwksProvider = $jwksProvider->reveal();
+
         $result = $this->buildVerifier()
-            ->withJwksProvider($jwksProvider->reveal())
-            ->withAuthTimeRequired(true)
             ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
             ->verify($token);
 
         self::assertSame($payload, $result);
@@ -95,14 +118,14 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
             $jwk->toPublic()->all(),
         ]];
 
-        $jwksProvider = new MemoryJwksProvider($jwks);
-
         $decrypter->decrypt('foo')->shouldBeCalled()->willReturn($token);
 
-        $result = $this->buildVerifier($decrypter->reveal())
-            ->withJwksProvider($jwksProvider)
-            ->withExpectedAlg('RS256')
-            ->verify('foo');
+        $this->authTimeRequired = true;
+        $this->expectedAlg = 'RS256';
+        $this->jwksProvider = new MemoryJwksProvider($jwks);
+        $this->tokenDecrypter = $decrypter->reveal();
+
+        $result = $this->buildVerifier()->verify('foo');
 
         self::assertSame($payload, $result);
     }
@@ -134,11 +157,11 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
             $jwk1->toPublic()->all(),
         ]];
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
-            ->withExpectedAlg('RS256')
-            ->verify($token);
+        $this->authTimeRequired = true;
+        $this->expectedAlg = 'RS256';
+        $this->jwksProvider = new MemoryJwksProvider($jwks);
+
+        $this->buildVerifier()->verify($token);
     }
 
     public function testFailWithInvalidJWT(): void
@@ -149,9 +172,9 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->verify('');
+        $this->jwksProvider = new MemoryJwksProvider($jwks);
+
+        $this->buildVerifier()->verify('');
     }
 
     public function testFailWithInvalidJWTPayload(): void
@@ -165,8 +188,8 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->verify($token);
+        $this->jwksProvider = new MemoryJwksProvider($jwks);
+
+        $this->buildVerifier()->verify($token);
     }
 }

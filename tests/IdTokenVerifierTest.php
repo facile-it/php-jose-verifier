@@ -6,9 +6,10 @@ namespace Facile\JoseVerifier\Test;
 
 use Base64Url\Base64Url;
 use Exception;
-use Facile\JoseVerifier\AbstractTokenVerifier;
-use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
+use Facile\JoseVerifier\Decrypter\NullTokenDecrypter;
+use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
+use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\IdTokenVerifier;
 use function Facile\JoseVerifier\jose_secret_key;
@@ -19,12 +20,20 @@ use function time;
 
 class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 {
-    /**
-     * @return IdTokenVerifier
-     */
-    protected function buildVerifier(TokenDecrypterInterface $decrypter = null): AbstractTokenVerifier
+    protected function buildVerifier(): IdTokenVerifier
     {
-        return new IdTokenVerifier('https://issuer.com', 'client-id', $decrypter);
+        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwks = ['keys' => [$jwk->toPublic()->all()]];
+
+        return new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: $this->authTimeRequired,
+            expectedAlg: $this->expectedAlg,
+            clientSecret: $this->clientSecret,
+            jwksProvider: $this->jwksProvider ?? new MemoryJwksProvider($jwks),
+            decrypter: $this->tokenDecrypter ?? new NullTokenDecrypter(),
+        );
     }
 
     public function testShouldValidateIdToken(): void
@@ -51,11 +60,15 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
-            ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: true,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier->withNonce('nonce')
             ->withAccessToken($accessToken)
             ->withCode($code)
             ->withState($state)
@@ -82,12 +95,15 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $verifier = new IdTokenVerifier('https://issuer.com/{tenantid}', 'client-id');
-        $result = $verifier
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withExpectedAlg('RS256')
-            ->withAadIssValidation(true)
-            ->verify($token);
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com/{tenantid}',
+            'client-id',
+            aadIssValidation: true,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier->verify($token);
 
         self::assertSame($payload, $result);
     }
@@ -110,10 +126,14 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withExpectedAlg('RS256')
-            ->withMaxAge(1)
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier->withMaxAge(1)
             ->verify($token);
 
         self::assertSame($payload, $result);
@@ -121,7 +141,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldFailWithInvalidAuthTime(): void
     {
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(InvalidTokenClaimException::class);
 
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
@@ -139,10 +159,14 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withExpectedAlg('RS256')
-            ->withMaxAge(1)
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $verifier->withMaxAge(1)
             ->verify($token);
     }
 
@@ -164,11 +188,15 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withExpectedAlg('RS256')
-            ->withMaxAge(1)
-            ->withClockTolerance(60)
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            clockTolerance: 60,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier->withMaxAge(1)
             ->verify($token);
 
         self::assertSame($payload, $result);
@@ -195,17 +223,21 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         $jwk2 = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk2->toPublic()->all()]];
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
-            ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: true,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $verifier->withNonce('nonce')
             ->verify($token);
     }
 
     public function testShouldFailWithBadAccessTokenHash(): void
     {
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(InvalidTokenClaimException::class);
 
         $accessToken = Base64Url::encode(random_bytes(32));
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
@@ -224,11 +256,15 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
-            ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: true,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier->withNonce('nonce')
             ->withAccessToken($accessToken)
             ->verify($token);
 
@@ -237,7 +273,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldFailWithBadCodeHash(): void
     {
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(InvalidTokenClaimException::class);
 
         $code = Base64Url::encode(random_bytes(32));
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
@@ -256,11 +292,15 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
-            ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: true,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier->withNonce('nonce')
             ->withCode($code)
             ->verify($token);
 
@@ -269,7 +309,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldFailWithBadStateHash(): void
     {
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(InvalidTokenClaimException::class);
 
         $state = Base64Url::encode(random_bytes(32));
         $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
@@ -288,11 +328,16 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider($jwks))
-            ->withAuthTimeRequired(true)
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            authTimeRequired: true,
+            expectedAlg: 'RS256',
+            jwksProvider: new MemoryJwksProvider($jwks)
+        );
+
+        $result = $verifier
             ->withNonce('nonce')
-            ->withExpectedAlg('RS256')
             ->withState($state)
             ->verify($token);
 
@@ -454,7 +499,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
     public function testValidateIdTokenWithAsyKey(array $payload, bool $expected): void
     {
         if (! $expected) {
-            $this->expectException(InvalidTokenException::class);
+            $this->expectException(InvalidTokenExceptionInterface::class);
         }
 
         $clientSecret = Base64Url::encode(random_bytes(32));
@@ -464,12 +509,17 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'alg' => 'HS256',
         ], $jwk);
 
-        $result = $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider())
-            ->withAuthTimeRequired(true)
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            clientSecret: $clientSecret,
+            authTimeRequired: true,
+            expectedAlg: 'HS256',
+            jwksProvider: new MemoryJwksProvider()
+        );
+
+        $result = $verifier
             ->withNonce('nonce')
-            ->withClientSecret($clientSecret)
-            ->withExpectedAlg('HS256')
             ->verify($token);
 
         self::assertSame($payload, $result);
@@ -497,9 +547,13 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'alg' => 'HS256',
         ], $jwk);
 
-        $this->buildVerifier()
-            ->withJwksProvider(new MemoryJwksProvider())
-            ->withExpectedAlg('HS256')
-            ->verify($token);
+        $verifier = new IdTokenVerifier(
+            'https://issuer.com',
+            'client-id',
+            expectedAlg: 'HS256',
+            jwksProvider: new MemoryJwksProvider()
+        );
+
+        $verifier->verify($token);
     }
 }

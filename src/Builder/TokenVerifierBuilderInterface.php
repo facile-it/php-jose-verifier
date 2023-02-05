@@ -17,13 +17,13 @@ use Facile\JoseVerifier\TokenVerifierInterface;
  */
 interface TokenVerifierBuilderInterface
 {
-    public function withClockTolerance(int $clockTolerance): static;
+    public function withClockTolerance(int $clockTolerance): TokenVerifierBuilderInterface;
 
-    public function withAadIssValidation(bool $aadIssValidation): static;
+    public function withAadIssValidation(bool $aadIssValidation): TokenVerifierBuilderInterface;
 
-    public function withJwksProvider(JwksProviderInterface $jwksProvider): static;
+    public function withJwksProvider(JwksProviderInterface $jwksProvider): TokenVerifierBuilderInterface;
 
-    public function withClientJwksProvider(JwksProviderInterface $clientJwksProvider): static;
+    public function withClientJwksProvider(JwksProviderInterface $clientJwksProvider): TokenVerifierBuilderInterface;
 
     /**
      * @psalm-return TVerifier

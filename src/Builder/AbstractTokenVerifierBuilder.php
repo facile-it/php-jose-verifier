@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\Builder;
 
 use Facile\JoseVerifier\AbstractTokenVerifier;
+use Facile\JoseVerifier\Decrypter\NullTokenDecrypter;
 use Facile\JoseVerifier\Decrypter\TokenDecrypter;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
 use Facile\JoseVerifier\Exception\InvalidArgumentException;
@@ -18,8 +19,7 @@ use Facile\JoseVerifier\TokenVerifierInterface;
  *
  * @psalm-import-type JWKSetType from JwksProviderInterface
  * @psalm-import-type ClientMetadataType from TokenVerifierInterface
- *
- * @psalm-type IssuerMetadataType = array{}&array{issuer: string, jwks_uri: string}
+ * @psalm-import-type IssuerMetadataType from TokenVerifierInterface
  *
  * @template TVerifier of AbstractTokenVerifier
  *
@@ -44,6 +44,8 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
     protected int $clockTolerance = 0;
 
     protected bool $aadIssValidation = false;
+
+    protected ?string $expectedAzp = null;
 
     protected ?JwksProviderInterface $clientJwksProvider = null;
 
@@ -77,6 +79,19 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         return $new;
     }
 
+    public function withExpectedAzp(string $azp): static
+    {
+        $new = clone $this;
+        $new->expectedAzp = $azp;
+
+        return $new;
+    }
+
+    protected function getExpectedAzp(): ?string
+    {
+        return $this->expectedAzp;
+    }
+
     public function withJwksProvider(JwksProviderInterface $jwksProvider): static
     {
         $new = clone $this;
@@ -93,12 +108,21 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         return $new;
     }
 
+    protected function getJwksProvider(): JwksProviderInterface
+    {
+        if ($this->jwksProvider) {
+            return $this->jwksProvider;
+        }
+
+        return $this->jwksProvider = $this->buildJwksProvider();
+    }
+
     /**
      * @throws InvalidArgumentException
      */
     protected function buildJwksProvider(): JwksProviderInterface
     {
-        $jwksUri = $this->getIssuerMetadata()['jwks_uri'] ?? null;
+        $jwksUri = $this->issuerMetadata['jwks_uri'] ?? null;
 
         $jwksBuilder = $this->jwksProviderBuilder ?? new JwksProviderBuilder();
 
@@ -107,6 +131,15 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         }
 
         return $jwksBuilder->build();
+    }
+
+    protected function getClientJwksProvider(): JwksProviderInterface
+    {
+        if ($this->clientJwksProvider) {
+            return $this->clientJwksProvider;
+        }
+
+        return $this->clientJwksProvider = $this->buildClientJwksProvider();
     }
 
     protected function buildClientJwksProvider(): JwksProviderInterface
@@ -127,74 +160,36 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         return $new;
     }
 
-    /**
-     * @psalm-return TVerifier
-     */
-    abstract protected function getVerifier(string $issuer, string $clientId): AbstractTokenVerifier;
-
     abstract protected function getExpectedAlg(): ?string;
 
     abstract protected function getExpectedEncAlg(): ?string;
 
     abstract protected function getExpectedEnc(): ?string;
 
-    /**
-     * @throws InvalidArgumentException
-     *
-     * @return array<string, mixed>
-     *
-     * @psalm-return ClientMetadataType
-     */
-    protected function getClientMetadata(): array
+    protected function getIssuer(): string
     {
-        return $this->clientMetadata;
+        return $this->issuerMetadata['issuer'];
     }
 
-    /**
-     * @throws InvalidArgumentException
-     *
-     * @return array<string, mixed>
-     *
-     * @psalm-return IssuerMetadataType
-     */
-    protected function getIssuerMetadata(): array
+    protected function getClientId(): string
     {
-        return $this->issuerMetadata;
+        return $this->clientMetadata['client_id'];
     }
 
-    /**
-     * @throws InvalidArgumentException
-     *
-     * @psalm-return TVerifier
-     */
-    public function build(): TokenVerifierInterface
+    protected function getClientSecret(): ?string
     {
-        $issuer = $this->issuerMetadata['issuer'] ?? null;
-        $clientId = $this->clientMetadata['client_id'] ?? null;
+        return $this->clientMetadata['client_secret'] ?? null;
+    }
 
-        if (empty($issuer)) {
-            throw new InvalidArgumentException('Invalid "issuer" from issuer metadata');
-        }
-
-        if (empty($clientId)) {
-            throw new InvalidArgumentException('Invalid "client_id" from client metadata');
-        }
-
-        $verifier = $this->getVerifier($issuer, $clientId)
-            ->withJwksProvider($this->jwksProvider ?: $this->buildJwksProvider())
-            ->withClientSecret($this->clientMetadata['client_secret'] ?? null)
-            ->withAuthTimeRequired($this->clientMetadata['require_auth_time'] ?? false)
-            ->withClockTolerance($this->clockTolerance)
-            ->withAadIssValidation($this->aadIssValidation)
-            ->withExpectedAlg($this->getExpectedAlg());
-
-        return $verifier;
+    protected function getAuthTimeRequired(): bool
+    {
+        return $this->clientMetadata['require_auth_time'] ?? false;
     }
 
     /**
      * @throws InvalidArgumentException On invalid id_token_encrypted* values
      */
-    protected function buildDecrypter(): ?TokenDecrypterInterface
+    protected function buildDecrypter(): TokenDecrypterInterface
     {
         $alg = $this->getExpectedEncAlg();
         $enc = $this->getExpectedEnc();
@@ -204,13 +199,13 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         }
 
         if (null === $alg) {
-            return null;
+            return new NullTokenDecrypter();
         }
 
         return (new TokenDecrypter())
             ->withExpectedAlg($alg)
             ->withExpectedEnc($enc)
-            ->withClientSecret($this->getClientMetadata()['client_secret'] ?? null)
-            ->withJwksProvider($this->clientJwksProvider ?: $this->buildClientJwksProvider());
+            ->withClientSecret($this->getClientSecret())
+            ->withJwksProvider($this->getClientJwksProvider());
     }
 }

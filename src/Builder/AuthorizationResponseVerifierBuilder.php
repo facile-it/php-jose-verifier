@@ -11,8 +11,7 @@ use Facile\JoseVerifier\TokenVerifierInterface;
 /**
  * @psalm-api
  *
- * @psalm-type IssuerMetadataType = array{}&array{issuer: string, jwks_uri: string}
- *
+ * @psalm-import-type IssuerMetadataType from TokenVerifierInterface
  * @psalm-import-type ClientMetadataType from TokenVerifierInterface
  *
  * @template-extends AbstractTokenVerifierBuilder<JWTVerifier>
@@ -31,23 +30,34 @@ final class AuthorizationResponseVerifierBuilder extends AbstractTokenVerifierBu
     /**
      * @throws InvalidArgumentException
      */
-    protected function getVerifier(string $issuer, string $clientId): JWTVerifier
+    public function build(): JWTVerifier
     {
-        return new JWTVerifier($issuer, $clientId, $this->buildDecrypter());
+        return new JWTVerifier(
+            $this->getIssuer(),
+            $this->getClientId(),
+            $this->getClientSecret(),
+            $this->getAuthTimeRequired(),
+            $this->clockTolerance,
+            $this->aadIssValidation,
+            $this->getExpectedAzp(),
+            $this->getExpectedAlg(),
+            $this->getJwksProvider(),
+            $this->buildDecrypter()
+        );
     }
 
     protected function getExpectedAlg(): ?string
     {
-        return $this->getClientMetadata()['authorization_signed_response_alg'] ?? null;
+        return $this->clientMetadata['authorization_signed_response_alg'] ?? null;
     }
 
     protected function getExpectedEncAlg(): ?string
     {
-        return $this->getClientMetadata()['authorization_encrypted_response_alg'] ?? null;
+        return $this->clientMetadata['authorization_encrypted_response_alg'] ?? null;
     }
 
     protected function getExpectedEnc(): ?string
     {
-        return $this->getClientMetadata()['authorization_encrypted_response_enc'] ?? null;
+        return $this->clientMetadata['authorization_encrypted_response_enc'] ?? null;
     }
 }

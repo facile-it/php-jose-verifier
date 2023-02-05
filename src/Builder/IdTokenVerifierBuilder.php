@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Builder;
 
-use Facile\JoseVerifier\AbstractTokenVerifier;
 use Facile\JoseVerifier\Exception\InvalidArgumentException;
 use Facile\JoseVerifier\IdTokenVerifier;
 use Facile\JoseVerifier\TokenVerifierInterface;
@@ -32,23 +31,34 @@ final class IdTokenVerifierBuilder extends AbstractTokenVerifierBuilder
     /**
      * @throws InvalidArgumentException
      */
-    protected function getVerifier(string $issuer, string $clientId): AbstractTokenVerifier
+    public function build(): IdTokenVerifier
     {
-        return new IdTokenVerifier($issuer, $clientId, $this->buildDecrypter());
+        return new IdTokenVerifier(
+            $this->getIssuer(),
+            $this->getClientId(),
+            $this->getClientSecret(),
+            $this->getAuthTimeRequired(),
+            $this->clockTolerance,
+            $this->aadIssValidation,
+            $this->getExpectedAzp(),
+            $this->getExpectedAlg(),
+            $this->getJwksProvider(),
+            $this->buildDecrypter()
+        );
     }
 
     protected function getExpectedAlg(): ?string
     {
-        return $this->getClientMetadata()['id_token_signed_response_alg'] ?? null;
+        return $this->clientMetadata['id_token_signed_response_alg'] ?? null;
     }
 
     protected function getExpectedEncAlg(): ?string
     {
-        return $this->getClientMetadata()['id_token_encrypted_response_alg'] ?? null;
+        return $this->clientMetadata['id_token_encrypted_response_alg'] ?? null;
     }
 
     protected function getExpectedEnc(): ?string
     {
-        return $this->getClientMetadata()['id_token_encrypted_response_enc'] ?? null;
+        return $this->clientMetadata['id_token_encrypted_response_enc'] ?? null;
     }
 }

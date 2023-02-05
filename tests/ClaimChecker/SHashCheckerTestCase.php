@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\ClaimChecker;
 
-use Facile\JoseVerifier\Internal\Checker\CHashChecker;
+use Facile\JoseVerifier\Internal\Checker\SHashChecker;
 use Jose\Component\Checker\ClaimChecker;
 
-class CHashCheckerTest extends AbstractHashCheckerTest
+class SHashCheckerTestCase extends AbstractHashCheckerTestCase
 {
     protected function getSupportedClaim(): string
     {
-        return 'c_hash';
+        return 's_hash';
     }
 
     protected function getChecker(string $alg): ClaimChecker
     {
-        return new CHashChecker('foo', $alg);
+        return new SHashChecker('foo', $alg);
     }
 }

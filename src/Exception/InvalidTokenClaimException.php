@@ -9,7 +9,7 @@ use Throwable;
 /**
  * @psalm-api
  */
-class InvalidTokenClaimException extends InvalidTokenException
+class InvalidTokenClaimException extends RuntimeException implements InvalidTokenExceptionInterface
 {
     private string $claim;
 

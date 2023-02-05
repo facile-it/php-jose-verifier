@@ -8,6 +8,7 @@ use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Internal\Checker\AtHashChecker;
 use Facile\JoseVerifier\Internal\Checker\CHashChecker;
 use Facile\JoseVerifier\Internal\Checker\SHashChecker;
+use InvalidArgumentException;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 
 final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVerifierInterface
@@ -48,7 +49,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
         try {
             $jws = (new CompactSerializer())->unserialize($jwt);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new InvalidTokenException('Invalid JWT provided', 0, $e);
         }
 

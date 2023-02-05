@@ -60,14 +60,14 @@ $clientMetadata = [
 
 ```php
 use Facile\JoseVerifier\Builder\AccessTokenVerifierBuilder;
-use Facile\JoseVerifier\Exception\InvalidTokenException;
+use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
 
 $builder = AccessTokenVerifierBuilder::create($issuerMetadata, $clientMetadata);
 
 $verifier = $builder->build();
 try {
     $payload = $verifier->verify($jwt);
-} catch (InvalidTokenException $e) {
+} catch (InvalidTokenExceptionInterface $e) {
     // your logic here
 }
 ```
@@ -96,7 +96,7 @@ $builder = AccessTokenVerifierBuilder::create($issuerMetadata, $clientMetadata)
 $verifier = $builder->build();
 try {
     $payload = $verifier->verify($jwt);
-} catch (InvalidTokenException $e) {
+} catch (InvalidTokenExceptionInterface $e) {
     // your logic here
 }
 ```
@@ -115,7 +115,7 @@ $builder = AccessTokenVerifierBuilder::create($issuerMetadata, $clientMetadata);
 $verifier = $builder->build();
 try {
     $payload = $verifier->verify($jwt);
-} catch (InvalidTokenException $e) {
+} catch (InvalidTokenExceptionInterface $e) {
     // your logic here
 }
 ```
@@ -153,7 +153,7 @@ $verifier = $verifier
 
 try {
     $payload = $verifier->verify($jwt);
-} catch (InvalidTokenException $e) {
+} catch (InvalidTokenExceptionInterface $e) {
     // your logic here
 }
 ``` 
@@ -171,7 +171,7 @@ $builder = UserInfoVerifierBuilder::create($issuerMetadata, $clientMetadata);
 $verifier = $builder->build();
 try {
     $payload = $verifier->verify($jwt);
-} catch (InvalidTokenException $e) {
+} catch (InvalidTokenExceptionInterface $e) {
     // your logic here
 }
 ```

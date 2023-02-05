@@ -42,5 +42,5 @@ interface JwksProviderInterface
     /**
      * Require reload keys from source
      */
-    public function reload(): static;
+    public function reload(): JwksProviderInterface;
 }

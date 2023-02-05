@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test;
 
-use Facile\JoseVerifier\Builder\AbstractTokenVerifierBuilder;
 use Facile\JoseVerifier\Builder\UserInfoVerifierBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
@@ -13,7 +12,7 @@ use Facile\JoseVerifier\UserInfoVerifier;
 
 class UserInfoVerifierBuilderTest extends AbstractVerifierBuilderTestCase
 {
-    protected function getBuilder(array $issuerMetadata, array $clientMetadata): AbstractTokenVerifierBuilder
+    protected function getBuilder(array $issuerMetadata, array $clientMetadata): UserInfoVerifierBuilder
     {
         return UserInfoVerifierBuilder::create($issuerMetadata, $clientMetadata);
     }

@@ -9,9 +9,9 @@ namespace Facile\JoseVerifier;
  */
 interface IdTokenVerifierInterface extends TokenVerifierInterface
 {
-    public function withAccessToken(?string $accessToken): static;
+    public function withAccessToken(?string $accessToken): IdTokenVerifierInterface;
 
-    public function withCode(?string $code): static;
+    public function withCode(?string $code): IdTokenVerifierInterface;
 
-    public function withState(?string $state): static;
+    public function withState(?string $state): IdTokenVerifierInterface;
 }

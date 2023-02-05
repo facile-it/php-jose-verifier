@@ -31,7 +31,7 @@
         "access token"
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.0",
         "ext-json": "*",
         "php-http/discovery": "^1.7",
         "psr/http-client": "^1.0",
@@ -87,7 +87,7 @@
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run --diff --allow-risky=yes",
         "cs-fix": "php-cs-fixer fix --diff --allow-risky=yes",
-        "psalm": "psalm --php-version=8.1",
+        "psalm": "psalm",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-text",
         "check": [

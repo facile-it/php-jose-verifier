@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
+use Facile\JoseVerifier\Decrypter\NullTokenDecrypter;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Internal\Checker\AuthTimeChecker;
@@ -12,6 +13,7 @@ use Facile\JoseVerifier\Internal\Checker\NonceChecker;
 use Facile\JoseVerifier\Internal\Validate;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
+use InvalidArgumentException;
 use function is_array;
 use Jose\Component\Checker\AlgorithmChecker;
 use Jose\Component\Checker\AudienceChecker;
@@ -23,10 +25,8 @@ use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Signature\Serializer\CompactSerializer;
-use InvalidArgumentException;
 use RuntimeException;
 use function str_replace;
-use function strpos;
 
 /**
  * @psalm-api
@@ -39,64 +39,53 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
 
     protected string $clientId;
 
+    protected ?string $clientSecret;
+
+    protected ?string $expectedAzp;
+
+    protected ?string $expectedAlg;
+
+    protected int $clockTolerance;
+
+    protected bool $authTimeRequired;
+
+    protected bool $aadIssValidation;
+
     protected JwksProviderInterface $jwksProvider;
 
-    protected ?string $clientSecret = null;
-
-    protected ?string $azp = null;
-
-    protected ?string $expectedAlg = null;
+    protected TokenDecrypterInterface $decrypter;
 
     protected ?string $nonce = null;
 
     protected ?int $maxAge = null;
 
-    protected int $clockTolerance = 0;
-
-    protected bool $authTimeRequired = false;
-
-    protected bool $aadIssValidation = false;
-
-    protected ?TokenDecrypterInterface $decrypter;
-
-    public function __construct(string $issuer, string $clientId, ?TokenDecrypterInterface $decrypter = null)
-    {
+    /**
+     * @internal Use the builder
+     *
+     * @psalm-internal \Facile\JoseVerifier
+     */
+    final public function __construct(
+        string $issuer,
+        string $clientId,
+        ?string $clientSecret = null,
+        bool $authTimeRequired = false,
+        int $clockTolerance = 0,
+        bool $aadIssValidation = false,
+        ?string $expectedAzp = null,
+        ?string $expectedAlg = null,
+        ?JwksProviderInterface $jwksProvider = null,
+        ?TokenDecrypterInterface $decrypter = null
+    ) {
         $this->issuer = $issuer;
         $this->clientId = $clientId;
-        $this->jwksProvider = new MemoryJwksProvider();
-        $this->decrypter = $decrypter;
-    }
-
-    public function withJwksProvider(JwksProviderInterface $jwksProvider): static
-    {
-        $new = clone $this;
-        $new->jwksProvider = $jwksProvider;
-
-        return $new;
-    }
-
-    public function withClientSecret(?string $clientSecret): static
-    {
-        $new = clone $this;
-        $new->clientSecret = $clientSecret;
-
-        return $new;
-    }
-
-    public function withAzp(?string $azp): static
-    {
-        $new = clone $this;
-        $new->azp = $azp;
-
-        return $new;
-    }
-
-    public function withExpectedAlg(?string $expectedAlg): static
-    {
-        $new = clone $this;
-        $new->expectedAlg = $expectedAlg;
-
-        return $new;
+        $this->clientSecret = $clientSecret;
+        $this->authTimeRequired = $authTimeRequired;
+        $this->clockTolerance = $clockTolerance;
+        $this->aadIssValidation = $aadIssValidation;
+        $this->expectedAzp = $expectedAzp;
+        $this->expectedAlg = $expectedAlg;
+        $this->jwksProvider = $jwksProvider ?? new MemoryJwksProvider();
+        $this->decrypter = $decrypter ?? new NullTokenDecrypter();
     }
 
     public function withNonce(?string $nonce): static
@@ -115,36 +104,8 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
         return $new;
     }
 
-    public function withClockTolerance(int $clockTolerance): static
-    {
-        $new = clone $this;
-        $new->clockTolerance = $clockTolerance;
-
-        return $new;
-    }
-
-    public function withAuthTimeRequired(bool $authTimeRequired): static
-    {
-        $new = clone $this;
-        $new->authTimeRequired = $authTimeRequired;
-
-        return $new;
-    }
-
-    public function withAadIssValidation(bool $aadIssValidation): static
-    {
-        $new = clone $this;
-        $new->aadIssValidation = $aadIssValidation;
-
-        return $new;
-    }
-
     protected function decrypt(string $jwt): string
     {
-        if (null === $this->decrypter) {
-            return $jwt;
-        }
-
         return $this->decrypter->decrypt($jwt) ?? '{}';
     }
 
@@ -170,8 +131,8 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             ->withClaim(new ExpirationTimeChecker($this->clockTolerance))
             ->withClaim(new NotBeforeChecker($this->clockTolerance, true));
 
-        if (null !== $this->azp) {
-            $validator = $validator->withClaim(new AzpChecker($this->azp));
+        if (null !== $this->expectedAzp) {
+            $validator = $validator->withClaim(new AzpChecker($this->expectedAzp));
         }
 
         if (null !== $this->expectedAlg) {
@@ -248,7 +209,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
      */
     private function getSigningJWKSet(string $alg, ?string $kid = null): JWKSet
     {
-        if (0 !== strpos($alg, 'HS')) {
+        if (! str_starts_with($alg, 'HS')) {
             // not symmetric key
             return null !== $kid
                 ? new JWKSet([$this->getJWKFromKid($kid)])

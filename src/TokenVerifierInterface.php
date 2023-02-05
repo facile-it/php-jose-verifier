@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier;
 
-use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
-use Facile\JoseVerifier\Exception\InvalidTokenException;
+use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 
 /**
@@ -64,7 +63,8 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  *     introspection_endpoint_auth_method?: non-empty-string,
  *     revocation_endpoint_auth_method?: non-empty-string
  * }
- * @psalm-type IssuerMetadataType = array{}&array{
+ * @psalm-type IssuerMetadataType array{}&array{issuer: string, jwks_uri: string}
+ * @psalm-type IssuerRemoteMetadataType = array{}&array{
  *     issuer: non-empty-string,
  *     authorization_endpoint: non-empty-string,
  *     token_endpoint?: non-empty-string,
@@ -126,15 +126,14 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  */
 interface TokenVerifierInterface
 {
-    public function withNonce(?string $nonce): static;
+    public function withNonce(?string $nonce): TokenVerifierInterface;
 
-    public function withMaxAge(?int $maxAge): static;
+    public function withMaxAge(?int $maxAge): TokenVerifierInterface;
 
     /**
      * Verify OpenID token
      *
-     * @throws InvalidTokenClaimException When a JWT claim is not valid
-     * @throws InvalidTokenException When the JWT is not valid
+     * @throws InvalidTokenExceptionInterface
      *
      * @return array The JWT Payload
      *

@@ -13,8 +13,7 @@ straightforward as possible.
 - Add support for PHP 8.2
 
 ### Changed
-- Drop support for PHP 7.2
-- Drop support for PHP 7.3
+- Drop support for PHP 7.x
 - Changed [`psalm`](https://psalm.dev) types
 - Changed builders to be immutable
 - Moved builders in `Facile\JoseVerifier\Builder` namespace
