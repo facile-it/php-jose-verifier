@@ -61,6 +61,7 @@ final class IdTokenVerifier extends AbstractTokenVerifier implements IdTokenVeri
 
     /**
      * @inheritDoc
+     *
      * @psalm-suppress MixedReturnTypeCoercion
      */
     public function verify(string $jwt): array
