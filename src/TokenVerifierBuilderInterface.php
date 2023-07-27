@@ -8,6 +8,7 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
 
 /**
  * @template TVerifier of TokenVerifierInterface
+ *
  * @psalm-import-type ClientMetadataObject from Psalm\PsalmTypes
  * @psalm-import-type IssuerMetadataObject from Psalm\PsalmTypes
  */
@@ -15,12 +16,14 @@ interface TokenVerifierBuilderInterface
 {
     /**
      * @param array<string, mixed> $clientMetadata
+     *
      * @psalm-param ClientMetadataObject $clientMetadata
      */
     public function setClientMetadata(array $clientMetadata): void;
 
     /**
      * @param array<string, mixed> $issuerMetadata
+     *
      * @psalm-param IssuerMetadataObject $issuerMetadata
      */
     public function setIssuerMetadata(array $issuerMetadata): void;

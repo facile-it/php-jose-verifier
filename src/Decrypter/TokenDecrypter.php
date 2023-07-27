@@ -150,6 +150,7 @@ class TokenDecrypter implements TokenDecrypterInterface
 
     /**
      * @return string[]
+     *
      * @psalm-return list<class-string<Algorithm>>
      */
     protected function getAlgorithmMap(): array

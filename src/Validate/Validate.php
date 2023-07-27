@@ -88,7 +88,9 @@ final class Validate
 
     /**
      * @return string[]
+     *
      * @psalm-return list<class-string<Algorithm\SignatureAlgorithm>>
+     *
      * @psalm-suppress UndefinedClass
      * @psalm-suppress InvalidReturnStatement
      * @psalm-suppress InvalidReturnType

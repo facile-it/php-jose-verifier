@@ -16,6 +16,7 @@ use SimpleXMLElement;
 
 /**
  * @internal
+ *
  * @codeCoverageIgnore
  */
 final class Plugin implements PluginEntryPointInterface
