@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        PHP_VERSION: 8.0
+        PHP_VERSION: 8.1
     working_dir: /app
     volumes:
       - ./:/app

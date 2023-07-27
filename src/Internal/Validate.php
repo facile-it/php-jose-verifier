@@ -19,6 +19,8 @@ use Throwable;
 
 /**
  * @internal
+ *
+ * @psalm-api
  */
 final class Validate
 {
@@ -42,7 +44,6 @@ final class Validate
     {
         $this->token = $token;
         $this->jwkset = new JWKSet([]);
-        $this->claimCheckers = [];
 
         foreach ($this->getAlgorithmMap() as $algorithmClass) {
             if (class_exists($algorithmClass)) {
@@ -105,9 +106,7 @@ final class Validate
     /**
      * @return string[]
      *
-     * @psalm-return list<class-string<Algorithm\SignatureAlgorithm>>
-     *
-     * @psalm-suppress UndefinedClass
+     * @psalm-return list<class-string<Algorithm\SignatureAlgorithm|Algorithm\MacAlgorithm>>
      */
     private function getAlgorithmMap(): array
     {

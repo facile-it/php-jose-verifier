@@ -29,6 +29,7 @@
     </issueHandlers>
 
     <stubs>
+        <file name="stubs/Jose/Component/Core/JWK.php.stub"/>
         <file name="stubs/Jose/Component/Core/JWKSet.php.stub"/>
         <file name="stubs/Jose/Component/Encryption/JWE.php.stub"/>
         <file name="stubs/Jose/Component/Signature/Signature.php.stub"/>
