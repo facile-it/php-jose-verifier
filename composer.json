@@ -13,7 +13,8 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "facile-it/facile-coding-standard": true
+            "facile-it/facile-coding-standard": true,
+            "php-http/discovery": true
         }
     },
     "keywords": [
