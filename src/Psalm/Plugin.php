@@ -43,7 +43,7 @@ final class Plugin implements PluginEntryPointInterface
     {
         $dir = new RecursiveDirectoryIterator($folder);
         $ite = new RecursiveIteratorIterator($dir);
-        /** @psalm-var \FilterIterator<array-key, string[]> $files */
+        /** @psalm-var \Iterator<array-key, string[]> $files */
         $files = new RegexIterator($ite, $pattern, RegexIterator::GET_MATCH);
 
         return array_merge([], ...array_values(iterator_to_array($files)));

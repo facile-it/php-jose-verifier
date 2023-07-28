@@ -14,8 +14,7 @@ use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 /**
  * @psalm-import-type ClientMetadataObject from Psalm\PsalmTypes
  * @psalm-import-type JWKSetObject from Psalm\PsalmTypes
- *
- * @psalm-type IssuerMetadataObject = array{issuer: string, jwks_uri: string}
+ * @psalm-import-type IssuerMetadataObject from TokenVerifierBuilderInterface
  *
  * @template TVerifier of AbstractTokenVerifier
  *
@@ -112,7 +111,6 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
             return $this->clientJwksProvider;
         }
 
-        /** @var JWKSetObject $jwks */
         $jwks = ['keys' => []];
 
         if ($this->clientMetadata) {

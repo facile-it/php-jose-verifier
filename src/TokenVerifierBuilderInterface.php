@@ -10,7 +10,8 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  * @template TVerifier of TokenVerifierInterface
  *
  * @psalm-import-type ClientMetadataObject from Psalm\PsalmTypes
- * @psalm-import-type IssuerMetadataObject from Psalm\PsalmTypes
+ *
+ * @psalm-type IssuerMetadataObject = array{issuer: string, jwks_uri: string, ...}
  */
 interface TokenVerifierBuilderInterface
 {
