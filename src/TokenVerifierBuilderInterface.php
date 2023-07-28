@@ -11,7 +11,7 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  *
  * @psalm-import-type ClientMetadataObject from Psalm\PsalmTypes
  *
- * @psalm-type IssuerMetadataObject = array{issuer: string, jwks_uri: string, ...}
+ * @psalm-type IssuerMetadataObject = array{issuer: string, jwks_uri: string}&array<string, mixed>
  */
 interface TokenVerifierBuilderInterface
 {
