@@ -115,6 +115,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
         $jwks = ['keys' => []];
 
         if ($this->clientMetadata) {
+            /** @psalm-var JWKSetObject $jwks */
             $jwks = $this->clientMetadata['jwks'] ?? $jwks;
         }
 
