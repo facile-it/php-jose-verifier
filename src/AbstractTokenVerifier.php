@@ -6,6 +6,7 @@ namespace Facile\JoseVerifier;
 
 use Facile\JoseVerifier\Checker\AuthTimeChecker;
 use Facile\JoseVerifier\Checker\AzpChecker;
+use Facile\JoseVerifier\Checker\InternalClock;
 use Facile\JoseVerifier\Checker\NonceChecker;
 use Facile\JoseVerifier\Decrypter\TokenDecrypterInterface;
 use Facile\JoseVerifier\Exception\InvalidArgumentException;
@@ -25,6 +26,7 @@ use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Signature\Serializer\CompactSerializer;
+use Psr\Clock\ClockInterface;
 use function str_replace;
 use function strpos;
 use Throwable;
@@ -71,12 +73,16 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
     /** @var TokenDecrypterInterface|null */
     protected $decrypter;
 
-    public function __construct(string $issuer, string $clientId, ?TokenDecrypterInterface $decrypter = null)
+    /** @var ClockInterface */
+    protected $clock;
+
+    public function __construct(string $issuer, string $clientId, ?TokenDecrypterInterface $decrypter = null, ?ClockInterface $clock = null)
     {
         $this->issuer = $issuer;
         $this->clientId = $clientId;
         $this->jwksProvider = new MemoryJwksProvider();
         $this->decrypter = $decrypter;
+        $this->clock = $clock ?: new InternalClock();
     }
 
     /**
@@ -201,10 +207,10 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
         $validator = Validate::token($jwt)
             ->keyset($this->buildJwks($jwt))
             ->claim(new IssuerChecker([$expectedIssuer], true))
-            ->claim(new IssuedAtChecker($this->clockTolerance, true))
+            ->claim(new IssuedAtChecker($this->clockTolerance, true, $this->clock))
             ->claim(new AudienceChecker($this->clientId, true))
-            ->claim(new ExpirationTimeChecker($this->clockTolerance))
-            ->claim(new NotBeforeChecker($this->clockTolerance, true));
+            ->claim(new ExpirationTimeChecker($this->clockTolerance, false, $this->clock))
+            ->claim(new NotBeforeChecker($this->clockTolerance, true, $this->clock));
 
         if (null !== $this->azp) {
             $validator = $validator->claim(new AzpChecker($this->azp));

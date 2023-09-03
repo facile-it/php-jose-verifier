@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Checker;
 
+use Psr\Clock\ClockInterface;
 use function is_int;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
@@ -22,10 +23,14 @@ final class AuthTimeChecker implements ClaimChecker
     /** @var int */
     private $allowedTimeDrift;
 
-    public function __construct(int $maxAge, int $allowedTimeDrift = 0)
+    /** @var ClockInterface */
+    private $clock;
+
+    public function __construct(int $maxAge, int $allowedTimeDrift = 0, ?ClockInterface $clock = null)
     {
         $this->maxAge = $maxAge;
         $this->allowedTimeDrift = $allowedTimeDrift;
+        $this->clock = $clock ?: new InternalClock();
     }
 
     /**
@@ -37,7 +42,7 @@ final class AuthTimeChecker implements ClaimChecker
             throw new InvalidClaimException('"auth_time" must be an integer.', self::CLAIM_NAME, $value);
         }
 
-        if ($value + $this->maxAge < time() - $this->allowedTimeDrift) {
+        if ($value + $this->maxAge < $this->clock->now()->getTimestamp() - $this->allowedTimeDrift) {
             throw new InvalidClaimException('Too much time has elapsed since the last End-User authentication.', self::CLAIM_NAME, $value);
         }
     }
