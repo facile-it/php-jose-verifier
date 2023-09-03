@@ -193,6 +193,9 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
         return $this->decrypter->decrypt($jwt) ?? '{}';
     }
 
+    /**
+     * @psalm-suppress TooManyArguments
+     */
     protected function create(string $jwt): Validate
     {
         $mandatoryClaims = [];
