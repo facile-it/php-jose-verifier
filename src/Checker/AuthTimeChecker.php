@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Checker;
 
-use Psr\Clock\ClockInterface;
 use function is_int;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
-use function time;
+use Psr\Clock\ClockInterface;
 
 /**
  * @internal
