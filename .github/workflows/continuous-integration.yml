@@ -18,13 +18,13 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.0"
           - "8.1"
           - "8.2"
+          - "8.3"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -32,7 +32,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v3"
+        uses: "actions/cache@v4"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -76,7 +76,7 @@ jobs:
           extensions: "bcmath, gmp"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v3"
+        uses: "actions/cache@v4"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
@@ -95,24 +95,24 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.0"
           - "8.1"
+          - "8.2"
         deps:
           - "lowest"
           - "latest"
         coverage:
           - "false"
         include:
-          - php-version: "8.2"
+          - php-version: "8.3"
             deps: "lowest"
             coverage: "false"
-          - php-version: "8.2"
+          - php-version: "8.3"
             deps: "latest"
             coverage: "true"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
@@ -123,7 +123,7 @@ jobs:
           extensions: "bcmath, gmp"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v3"
+        uses: "actions/cache@v4"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.lock') }}"
