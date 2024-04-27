@@ -33,14 +33,14 @@ namespace Facile\JoseVerifier\JWK;
 interface JwksProviderInterface
 {
     /**
-     * Get keys
+     * Get keys.
      *
      * @psalm-return JWKSetType
      */
     public function getJwks(): array;
 
     /**
-     * Require reload keys from source
+     * Require reload keys from source.
      */
     public function reload(): JwksProviderInterface;
 }

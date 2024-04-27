@@ -50,7 +50,7 @@ final class Validate
                 try {
                     $this->algorithms[] = new $algorithmClass();
                 } catch (Throwable $throwable) {
-                    //does nothing
+                    // does nothing
                 }
             }
         }

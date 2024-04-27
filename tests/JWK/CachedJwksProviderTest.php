@@ -6,11 +6,12 @@ namespace Facile\JoseVerifier\Test\JWK;
 
 use Facile\JoseVerifier\JWK\CachedJwksProvider;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
-use function json_encode;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\SimpleCache\CacheInterface;
+
+use function json_encode;
 
 class CachedJwksProviderTest extends TestCase
 {

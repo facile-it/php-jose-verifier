@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\Test\Decrypter;
 
 use Facile\JoseVerifier\Decrypter\TokenDecrypter;
-use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\Test\AbstractJwtTestCase;
 use Jose\Component\Core\AlgorithmManager;
@@ -29,8 +28,11 @@ use Jose\Component\Signature\JWSLoader;
 use Jose\Component\Signature\JWSVerifier;
 use Jose\Component\Signature\Serializer\CompactSerializer as JWSSerializer;
 use Jose\Component\Signature\Serializer\JWSSerializerManager;
+
+use function Facile\JoseVerifier\jose_secret_key;
 use function json_decode;
 use function json_encode;
+
 use const JSON_THROW_ON_ERROR;
 
 class TokenDecrypterTest extends AbstractJwtTestCase
@@ -53,12 +55,12 @@ class TokenDecrypterTest extends AbstractJwtTestCase
 
         $builder = new NestedTokenBuilder($jweBuilder, $jweSerializerManager, $jwsBuilder, $jwsSerializerManager);
 
-        $sigKey = JWKFactory::createRSAKey(2048, [
+        $sigKey = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RS256',
             'use' => 'sig',
         ]);
 
-        $encKey = JWKFactory::createRSAKey(2048, [
+        $encKey = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RSA-OAEP',
             'use' => 'enc',
         ]);
@@ -111,7 +113,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
 
         $builder = new NestedTokenBuilder($jweBuilder, $jweSerializerManager, $jwsBuilder, $jwsSerializerManager);
 
-        $sigKey = JWKFactory::createRSAKey(2048, [
+        $sigKey = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RS256',
             'use' => 'sig',
         ]);

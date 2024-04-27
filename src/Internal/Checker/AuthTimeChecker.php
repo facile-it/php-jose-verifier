@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Internal\Checker;
 
-use function is_int;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
+
+use function is_int;
 use function time;
 
 /**

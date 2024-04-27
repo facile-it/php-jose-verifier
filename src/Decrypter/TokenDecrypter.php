@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Decrypter;
 
-use function class_exists;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Exception\LogicException;
 use Facile\JoseVerifier\Internal\Checker\ContentEncryptionAlgorithmChecker;
-use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Jose\Component\Checker\AlgorithmChecker;
@@ -18,15 +16,16 @@ use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Encryption\Algorithm\ContentEncryption;
 use Jose\Component\Encryption\Algorithm\KeyEncryption;
-use Jose\Component\Encryption\Compression\CompressionMethodManager;
-use Jose\Component\Encryption\Compression\Deflate;
 use Jose\Component\Encryption\JWEDecrypter;
 use Jose\Component\Encryption\JWELoader;
 use Jose\Component\Encryption\JWETokenSupport;
 use Jose\Component\Encryption\Serializer\CompactSerializer;
 use Jose\Component\Encryption\Serializer\JWESerializerManager;
-use function preg_match;
 use Throwable;
+
+use function class_exists;
+use function Facile\JoseVerifier\jose_secret_key;
+use function preg_match;
 
 final class TokenDecrypter implements TokenDecrypterInterface
 {
@@ -81,7 +80,7 @@ final class TokenDecrypter implements TokenDecrypterInterface
                 try {
                     $this->algorithms[] = new $algorithmClass();
                 } catch (Throwable $throwable) {
-                    //does nothing
+                    // does nothing
                 }
             }
         }

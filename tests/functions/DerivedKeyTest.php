@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\functions;
 
-use function Facile\JoseVerifier\derived_key;
 use PHPUnit\Framework\TestCase;
+
+use function Facile\JoseVerifier\derived_key;
 
 class DerivedKeyTest extends TestCase
 {

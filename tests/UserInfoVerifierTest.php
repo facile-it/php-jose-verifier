@@ -10,10 +10,11 @@ use Facile\JoseVerifier\Decrypter\NullTokenDecrypter;
 use Facile\JoseVerifier\Exception\InvalidTokenClaimException;
 use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
-use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\UserInfoVerifier;
 use Jose\Component\KeyManagement\JWKFactory;
+
+use function Facile\JoseVerifier\jose_secret_key;
 use function random_bytes;
 use function time;
 
@@ -21,7 +22,7 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
 {
     protected function buildVerifier(): UserInfoVerifier
     {
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
         return new UserInfoVerifier(
@@ -38,7 +39,7 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldValidateToken(): void
     {
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'sub' => 'client-id',
         ];
@@ -61,7 +62,7 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
     {
         $this->expectException(InvalidTokenException::class);
 
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -75,7 +76,7 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
             'alg' => 'RS256',
         ], $jwk);
 
-        $jwk2 = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk2 = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk2->toPublic()->all()]];
 
         $this->authTimeRequired = true;

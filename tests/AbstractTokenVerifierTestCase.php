@@ -11,6 +11,7 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Jose\Component\KeyManagement\JWKFactory;
 use Prophecy\PhpUnit\ProphecyTrait;
+
 use function time;
 
 abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
@@ -43,12 +44,12 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
 
     public function testShouldReloadJwksWhenKidNotFound(): void
     {
-        $jwk1 = JWKFactory::createRSAKey(2048, [
+        $jwk1 = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RS256',
             'use' => 'sig',
             'kid' => 'kid1',
         ]);
-        $jwk2 = JWKFactory::createRSAKey(2048, [
+        $jwk2 = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RS256',
             'use' => 'sig',
             'kid' => 'kid2',
@@ -98,7 +99,7 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
     {
         $decrypter = $this->prophesize(TokenDecrypterInterface::class);
 
-        $jwk = JWKFactory::createRSAKey(2048, [
+        $jwk = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RS256',
             'use' => 'sig',
         ]);
@@ -135,7 +136,7 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
         $this->expectException(InvalidTokenException::class);
         $this->expectExceptionMessage('Unable to find the jwk with the provided kid: kid2');
 
-        $jwk1 = JWKFactory::createRSAKey(2048, [
+        $jwk1 = JWKFactory::createRSAKey(2_048, [
             'alg' => 'RS256',
             'use' => 'sig',
             'kid' => 'kid1',
@@ -169,7 +170,7 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
         $this->expectException(InvalidTokenException::class);
         $this->expectExceptionMessage('Invalid JWT provided');
 
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
         $this->jwksProvider = new MemoryJwksProvider($jwks);
@@ -181,7 +182,7 @@ abstract class AbstractTokenVerifierTestCase extends AbstractJwtTestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $token = $this->createRawSignedToken('foo', [
             'alg' => 'RS256',
         ], $jwk);

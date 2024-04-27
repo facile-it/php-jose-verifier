@@ -7,6 +7,7 @@ namespace Facile\JoseVerifier\Test\ClaimChecker;
 use Facile\JoseVerifier\Internal\Checker\AuthTimeChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
+
 use function time;
 
 class AuthTimeCheckerTest extends TestCase

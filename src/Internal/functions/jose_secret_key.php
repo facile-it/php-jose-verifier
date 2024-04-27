@@ -6,6 +6,7 @@ namespace Facile\JoseVerifier;
 
 use Base64Url\Base64Url;
 use Jose\Component\Core\JWK;
+
 use function preg_match;
 
 /**

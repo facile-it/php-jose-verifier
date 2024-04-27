@@ -14,7 +14,6 @@ use Facile\JoseVerifier\Internal\Validate;
 use Facile\JoseVerifier\JWK\JwksProviderInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use InvalidArgumentException;
-use function is_array;
 use Jose\Component\Checker\AlgorithmChecker;
 use Jose\Component\Checker\AudienceChecker;
 use Jose\Component\Checker\ExpirationTimeChecker;
@@ -26,6 +25,8 @@ use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\JsonConverter;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 use RuntimeException;
+
+use function is_array;
 use function str_replace;
 
 /**

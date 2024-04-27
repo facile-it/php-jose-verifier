@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\JWK;
 
-use function array_key_exists;
 use Facile\JoseVerifier\Exception\RuntimeException;
-use function is_array;
-use function json_decode;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+
+use function array_key_exists;
+use function is_array;
+use function json_decode;
 
 /**
  * Provide a {@see JwksProviderInterface} to fetch JWKSet from a remote location.

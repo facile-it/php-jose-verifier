@@ -24,7 +24,7 @@ class ValidateTest extends AbstractJwtTestCase
 
     protected function setUp(): void
     {
-        $this->jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $this->jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $this->jwks = JWKSet::createFromKeyData(['keys' => [$this->jwk->toPublic()->all()]]);
     }
 
@@ -81,7 +81,7 @@ class ValidateTest extends AbstractJwtTestCase
         $token = $this->generateTokenWithPayload($payload);
         $baseValidator = Validate::withToken($token);
 
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = JWKSet::createFromKeyData(['keys' => [$jwk->toPublic()->all()]]);
 
         $validator = $baseValidator->withJWKSet($jwks);

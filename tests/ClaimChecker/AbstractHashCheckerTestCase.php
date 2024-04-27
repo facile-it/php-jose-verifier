@@ -7,6 +7,7 @@ namespace Facile\JoseVerifier\Test\ClaimChecker;
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
+
 use function sprintf;
 
 abstract class AbstractHashCheckerTestCase extends TestCase
