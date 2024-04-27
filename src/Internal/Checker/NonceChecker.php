@@ -6,6 +6,7 @@ namespace Facile\JoseVerifier\Internal\Checker;
 
 use Jose\Component\Checker\ClaimChecker;
 use Jose\Component\Checker\InvalidClaimException;
+
 use function sprintf;
 
 /**

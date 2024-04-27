@@ -6,7 +6,6 @@ namespace Facile\JoseVerifier\Test\JWK;
 
 use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
-use function json_encode;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientInterface;
@@ -14,6 +13,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+
+use function json_encode;
 
 class RemoteJwksProviderTest extends TestCase
 {

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\functions;
 
-use function Facile\JoseVerifier\derived_key;
 use PHPUnit\Framework\TestCase;
+
+use function Facile\JoseVerifier\derived_key;
 
 class DerivedKeyTest extends TestCase
 {
@@ -19,7 +20,7 @@ class DerivedKeyTest extends TestCase
         static::assertSame($expected, $jwk->get('k'));
     }
 
-    public function valuesProvider(): array
+    public static function valuesProvider(): array
     {
         $string = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 

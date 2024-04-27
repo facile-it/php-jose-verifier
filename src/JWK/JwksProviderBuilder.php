@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\JWK;
 
 use Facile\JoseVerifier\Exception\InvalidArgumentException;
-use Http\Discovery\Psr17FactoryDiscovery;
-use Http\Discovery\Psr18ClientDiscovery;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\HttpClient\Psr18Client;
+
 use function sha1;
 use function substr;
 
@@ -31,7 +32,7 @@ final class JwksProviderBuilder
 
     private ?CacheInterface $cache = null;
 
-    private ?int $cacheTtl = 86400;
+    private ?int $cacheTtl = 86_400;
 
     /**
      * @psalm-param JWKSetType $jwks
@@ -86,12 +87,12 @@ final class JwksProviderBuilder
 
     protected function buildRequestFactory(): RequestFactoryInterface
     {
-        return $this->requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
+        return $this->requestFactory ?? new Psr17Factory();
     }
 
     protected function buildHttpClient(): ClientInterface
     {
-        return $this->httpClient ?? Psr18ClientDiscovery::find();
+        return $this->httpClient ?? new Psr18Client();
     }
 
     /**

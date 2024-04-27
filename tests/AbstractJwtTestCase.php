@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\Test;
 
 use Base64Url\Base64Url;
-use function hash;
 use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWK;
 use Jose\Component\Signature\Algorithm\HS256;
 use Jose\Component\Signature\Algorithm\RS256;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\Serializer\CompactSerializer;
-use function json_encode;
 use PHPUnit\Framework\TestCase;
+
+use function hash;
+use function json_encode;
 use function strlen;
 use function substr;
 

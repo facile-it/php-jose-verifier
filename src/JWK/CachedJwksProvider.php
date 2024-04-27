@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier\JWK;
 
 use Facile\JoseVerifier\Exception\RuntimeException;
+use JsonException;
+use Psr\SimpleCache\CacheInterface;
+
 use function is_array;
 use function is_string;
 use function json_decode;
 use function json_encode;
-use JsonException;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * Wrapper to provide cache feature for a {@see JwksProviderInterface}.

@@ -12,9 +12,10 @@ use Facile\JoseVerifier\Exception\InvalidTokenException;
 use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
 use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\IdTokenVerifier;
-use function Facile\JoseVerifier\jose_secret_key;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Jose\Component\KeyManagement\JWKFactory;
+
+use function Facile\JoseVerifier\jose_secret_key;
 use function random_bytes;
 use function time;
 
@@ -22,7 +23,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 {
     protected function buildVerifier(): IdTokenVerifier
     {
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk->toPublic()->all()]];
 
         return new IdTokenVerifier(
@@ -41,7 +42,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         $accessToken = Base64Url::encode(random_bytes(32));
         $code = Base64Url::encode(random_bytes(32));
         $state = Base64Url::encode(random_bytes(32));
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -79,7 +80,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldValidateWithMultiTenant(): void
     {
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com/office',
             'sub' => 'client-id',
@@ -110,7 +111,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldValidateWithValidMaxAge(): void
     {
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -143,7 +144,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
     {
         $this->expectException(InvalidTokenClaimException::class);
 
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -172,7 +173,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
 
     public function testShouldNotFailWithOldAuthTimeButHighClockTolerance(): void
     {
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -206,7 +207,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
     {
         $this->expectException(InvalidTokenException::class);
 
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -220,7 +221,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'alg' => 'RS256',
         ], $jwk);
 
-        $jwk2 = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk2 = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $jwks = ['keys' => [$jwk2->toPublic()->all()]];
 
         $verifier = new IdTokenVerifier(
@@ -240,7 +241,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         $this->expectException(InvalidTokenClaimException::class);
 
         $accessToken = Base64Url::encode(random_bytes(32));
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -276,7 +277,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         $this->expectException(InvalidTokenClaimException::class);
 
         $code = Base64Url::encode(random_bytes(32));
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -312,7 +313,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         $this->expectException(InvalidTokenClaimException::class);
 
         $state = Base64Url::encode(random_bytes(32));
-        $jwk = JWKFactory::createRSAKey(2048, ['alg' => 'RS256', 'use' => 'sig']);
+        $jwk = JWKFactory::createRSAKey(2_048, ['alg' => 'RS256', 'use' => 'sig']);
         $payload = [
             'iss' => 'https://issuer.com',
             'sub' => 'client-id',
@@ -344,7 +345,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         self::assertSame($payload, $result);
     }
 
-    public function verifyIdTokenProvider(): array
+    public static function verifyIdTokenProvider(): array
     {
         return [
             [

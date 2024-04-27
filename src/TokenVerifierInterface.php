@@ -131,7 +131,7 @@ interface TokenVerifierInterface
     public function withMaxAge(?int $maxAge): TokenVerifierInterface;
 
     /**
-     * Verify OpenID token
+     * Verify OpenID token.
      *
      * @throws InvalidTokenExceptionInterface
      *

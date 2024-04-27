@@ -8,13 +8,14 @@ use Facile\JoseVerifier\JWK\CachedJwksProvider;
 use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
-use function get_class;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
+
+use function get_class;
 
 class JwksProviderBuilderTest extends TestCase
 {
@@ -93,7 +94,7 @@ class JwksProviderBuilderTest extends TestCase
 
         $this->assertInstanceOf(CachedJwksProvider::class, $provider);
         $this->assertSame($cache->reveal(), $this->getPropertyValue($provider, 'cache'));
-        $this->assertSame(86400, $this->getPropertyValue($provider, 'ttl'));
+        $this->assertSame(86_400, $this->getPropertyValue($provider, 'ttl'));
 
         /** @var RemoteJwksProvider $remoteProvider */
         $remoteProvider = $this->getPropertyValue($provider, 'provider');
