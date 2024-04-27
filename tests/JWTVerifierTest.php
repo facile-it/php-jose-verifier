@@ -90,7 +90,7 @@ class JWTVerifierTest extends AbstractTokenVerifierTestCase
         $this->buildVerifier()->verify($token);
     }
 
-    public function verifyTokenProvider(): array
+    public static function verifyTokenProvider(): array
     {
         return [
             [

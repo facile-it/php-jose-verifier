@@ -344,7 +344,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         self::assertSame($payload, $result);
     }
 
-    public function verifyIdTokenProvider(): array
+    public static function verifyIdTokenProvider(): array
     {
         return [
             [

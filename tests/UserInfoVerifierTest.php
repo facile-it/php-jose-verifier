@@ -87,7 +87,7 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
             ->verify($token);
     }
 
-    public function verifyTokenProvider(): array
+    public static function verifyTokenProvider(): array
     {
         return [
             'valid sub' => [
