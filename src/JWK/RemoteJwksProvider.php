@@ -11,18 +11,14 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 
-use function array_key_exists;
-use function is_array;
 use function json_decode;
 
 /**
  * Provide a {@see JwksProviderInterface} to fetch JWKSet from a remote location.
  *
  * @psalm-api
- *
- * @psalm-import-type JWKSetType from JwksProviderInterface
  */
-final class RemoteJwksProvider implements JwksProviderInterface
+final class RemoteJwksProvider extends AbstractJwksProvider
 {
     private ClientInterface $client;
 
@@ -89,21 +85,10 @@ final class RemoteJwksProvider implements JwksProviderInterface
         }
 
         if ($this->isJWKSet($data)) {
-            /** @var JWKSetType $data */
             return $data;
         }
 
         throw new RuntimeException('Invalid key set content');
-    }
-
-    /**
-     * @param mixed $data
-     *
-     * @psalm-assert-if-true JWKSetType $data
-     */
-    private function isJWKSet($data): bool
-    {
-        return is_array($data) && array_key_exists('keys', $data) && is_array($data['keys']);
     }
 
     public function reload(): static

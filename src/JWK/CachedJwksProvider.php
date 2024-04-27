@@ -8,7 +8,6 @@ use Facile\JoseVerifier\Exception\RuntimeException;
 use JsonException;
 use Psr\SimpleCache\CacheInterface;
 
-use function is_array;
 use function is_string;
 use function json_decode;
 use function json_encode;
@@ -17,10 +16,8 @@ use function json_encode;
  * Wrapper to provide cache feature for a {@see JwksProviderInterface}.
  *
  * @psalm-api
- *
- * @psalm-import-type JWKSetType from JwksProviderInterface
  */
-final class CachedJwksProvider implements JwksProviderInterface
+final class CachedJwksProvider extends AbstractJwksProvider
 {
     private JwksProviderInterface $provider;
 
@@ -52,13 +49,13 @@ final class CachedJwksProvider implements JwksProviderInterface
 
         if (is_string($cached)) {
             try {
-                /** @var null|JWKSetType $jwks */
+                /** @var mixed $jwks */
                 $jwks = json_decode($cached, true, 512, JSON_THROW_ON_ERROR);
             } catch (JsonException $e) {
                 throw new RuntimeException('Unable to decode cached JWKSet', 0, $e);
             }
 
-            if (is_array($jwks)) {
+            if ($this->isJWKSet($jwks)) {
                 return $jwks;
             }
         }

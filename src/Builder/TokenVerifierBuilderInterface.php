@@ -13,20 +13,32 @@ use Facile\JoseVerifier\TokenVerifierInterface;
  * @psalm-import-type ClientMetadataType from TokenVerifierInterface
  * @psalm-import-type IssuerMetadataType from TokenVerifierInterface
  *
- * @template TVerifier of TokenVerifierInterface
+ * @template T of TokenVerifierInterface
  */
 interface TokenVerifierBuilderInterface
 {
+    /**
+     * @return TokenVerifierBuilderInterface<T>
+     */
     public function withClockTolerance(int $clockTolerance): TokenVerifierBuilderInterface;
 
+    /**
+     * @return TokenVerifierBuilderInterface<T>
+     */
     public function withAadIssValidation(bool $aadIssValidation): TokenVerifierBuilderInterface;
 
+    /**
+     * @return TokenVerifierBuilderInterface<T>
+     */
     public function withJwksProvider(JwksProviderInterface $jwksProvider): TokenVerifierBuilderInterface;
 
+    /**
+     * @return TokenVerifierBuilderInterface<T>
+     */
     public function withClientJwksProvider(JwksProviderInterface $clientJwksProvider): TokenVerifierBuilderInterface;
 
     /**
-     * @psalm-return TVerifier
+     * @psalm-return T
      */
     public function build(): TokenVerifierInterface;
 }

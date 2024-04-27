@@ -11,15 +11,12 @@ use JsonSerializable;
 use Facile\JoseVerifier\Psalm\PsalmTypes;
 
 /**
- * @psalm-import-type JWKType from JWK
- * @psalm-type JWKSetType = array{keys: list<JWKType>}
- *
  * @implements IteratorAggregate<mixed, JWK>
  */
 class JWKSet implements Countable, IteratorAggregate, JsonSerializable
 {
     /**
-     * @psalm-param JWKSetType $data
+     * @psalm-param array{keys: list<array<string, mixed>>} $data
      * @return static
      */
     public static function createFromKeyData(array $data): self
@@ -71,7 +68,7 @@ class JWKSet implements Countable, IteratorAggregate, JsonSerializable
     {}
 
     /**
-     * @return JWKSetType
+     * @return array{keys: list<array<string, mixed>>}
      */
     public function jsonSerialize(): array
     {}

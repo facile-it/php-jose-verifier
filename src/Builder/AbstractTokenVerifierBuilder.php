@@ -17,7 +17,8 @@ use Facile\JoseVerifier\TokenVerifierInterface;
 /**
  * @psalm-api
  *
- * @psalm-import-type JWKSetType from JwksProviderInterface
+ * @psalm-type JWKSetType = array{keys: list<array<string, mixed>>}
+ *
  * @psalm-import-type ClientMetadataType from TokenVerifierInterface
  * @psalm-import-type IssuerMetadataType from TokenVerifierInterface
  *
@@ -144,7 +145,6 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
 
     protected function buildClientJwksProvider(): JwksProviderInterface
     {
-        /** @var JWKSetType $jwks */
         $jwks = ['keys' => []];
 
         $jwks = $this->clientMetadata['jwks'] ?? $jwks;

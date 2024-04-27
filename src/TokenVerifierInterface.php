@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Facile\JoseVerifier;
 
 use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
-use Facile\JoseVerifier\JWK\JwksProviderInterface;
 
 /**
  * @psalm-api
  *
- * @psalm-import-type JWKSetType from JwksProviderInterface
- *
+ * @psalm-type JWKSetType = array{keys: list<array<string, mixed>>}
  * @psalm-type JWTPayloadType = array<string, mixed>
  * @psalm-type OpenIdDisplayType = non-empty-string
  * @psalm-type OpenIdClaimType = 'normal'|'aggregated'|'distribuited'
@@ -21,7 +19,7 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  * @psalm-type OpenIdApplicationType = 'web'|'native'
  * @psalm-type OpenIdSubjectType = 'pairwise'|'public'
  * @psalm-type OpenIdAuthMethodType = 'client_secret_post'|'client_secret_basic'|'client_secret_jwt'|'private_key_jwt'|'none'|'tls_client_auth'|'self_signed_tls_client_auth'
- * @psalm-type ClientMetadataType = array{}&array{
+ * @psalm-type ClientMetadataType = array{
  *     client_id: non-empty-string,
  *     client_secret?: string,
  *     redirect_uris?: list<non-empty-string>,
@@ -61,10 +59,11 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  *     software_id?: non-empty-string,
  *     software_version?: non-empty-string,
  *     introspection_endpoint_auth_method?: non-empty-string,
- *     revocation_endpoint_auth_method?: non-empty-string
+ *     revocation_endpoint_auth_method?: non-empty-string,
+ *     ...
  * }
- * @psalm-type IssuerMetadataType array{}&array{issuer: string, jwks_uri: string}
- * @psalm-type IssuerRemoteMetadataType = array{}&array{
+ * @psalm-type IssuerMetadataType = array{issuer: string, jwks_uri: string, ...}
+ * @psalm-type IssuerRemoteMetadataType = array{
  *     issuer: non-empty-string,
  *     authorization_endpoint: non-empty-string,
  *     token_endpoint?: non-empty-string,
@@ -119,9 +118,9 @@ use Facile\JoseVerifier\JWK\JwksProviderInterface;
  *     frontchannel_logout_session_supported?: bool,
  *     backchannel_logout_supported?: bool,
  *     backchannel_logout_session_supported?: bool,
- *     mtls_endpoint_aliases?: array<string,
- *     string>,
- *     tls_client_certificate_bound_access_tokens?: bool
+ *     mtls_endpoint_aliases?: array<string, string>,
+ *     tls_client_certificate_bound_access_tokens?: bool,
+ *     ...
  * }
  */
 interface TokenVerifierInterface

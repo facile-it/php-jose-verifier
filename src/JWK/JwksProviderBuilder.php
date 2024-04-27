@@ -17,7 +17,7 @@ use function substr;
 /**
  * @psalm-api
  *
- * @psalm-import-type JWKSetType from JwksProviderInterface
+ * @psalm-type JWKSetType = array{keys: list<array<string, mixed>>}
  */
 final class JwksProviderBuilder
 {
