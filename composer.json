@@ -61,7 +61,7 @@
         "facile-it/facile-coding-standard": "^1.2.0",
         "friendsofphp/php-cs-fixer": "^3.14.3",
         "phpspec/prophecy-phpunit": "^2.0.1",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^1.10 || ^2.0",
         "phpunit/phpunit": "^10.5.20 || ^11.1.0",
         "spomky-labs/aes-key-wrap": "^7.0",
         "vimeo/psalm": "^5.23.1",
