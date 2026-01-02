@@ -13,6 +13,7 @@ use Facile\JoseVerifier\Exception\InvalidTokenExceptionInterface;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\UserInfoVerifier;
 use Jose\Component\KeyManagement\JWKFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function Facile\JoseVerifier\jose_secret_key;
 use function random_bytes;
@@ -127,10 +128,9 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
     }
 
     /**
-     * @dataProvider verifyTokenProvider
-     *
      * @throws Exception
      */
+    #[DataProvider('verifyTokenProvider')]
     public function testValidateTokenWithAsyKey(array $payload, bool $expected): void
     {
         if (! $expected) {

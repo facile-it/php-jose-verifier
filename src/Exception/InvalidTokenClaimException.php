@@ -19,7 +19,7 @@ class InvalidTokenClaimException extends RuntimeException implements InvalidToke
     /**
      * @param mixed $value
      */
-    public function __construct(string $message, string $claim, $value, Throwable $previous = null)
+    public function __construct(string $message, string $claim, $value, ?Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
         $this->claim = $claim;

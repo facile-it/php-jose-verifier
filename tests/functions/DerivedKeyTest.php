@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\functions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function Facile\JoseVerifier\derived_key;
 
 class DerivedKeyTest extends TestCase
 {
-    /**
-     * @dataProvider valuesProvider
-     */
+    #[DataProvider('valuesProvider')]
     public function testDerivedKey(string $secret, int $length, string $expected): void
     {
         $jwk = derived_key($secret, $length);
