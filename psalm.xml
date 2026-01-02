@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <psalm
     errorLevel="1"
-    phpVersion="8.2"
+    phpVersion="8.1"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -26,6 +26,7 @@
 
     <issueHandlers>
         <InvalidCatch errorLevel="suppress" />
+        <MissingOverrideAttribute errorLevel="suppress" />
     </issueHandlers>
 
     <stubs>

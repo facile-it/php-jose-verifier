@@ -14,6 +14,7 @@ use Facile\JoseVerifier\Exception\RuntimeException;
 use Facile\JoseVerifier\IdTokenVerifier;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Jose\Component\KeyManagement\JWKFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function Facile\JoseVerifier\jose_secret_key;
 use function random_bytes;
@@ -493,10 +494,9 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
     }
 
     /**
-     * @dataProvider verifyIdTokenProvider
-     *
      * @throws Exception
      */
+    #[DataProvider('verifyIdTokenProvider')]
     public function testValidateIdTokenWithAsyKey(array $payload, bool $expected): void
     {
         if (! $expected) {

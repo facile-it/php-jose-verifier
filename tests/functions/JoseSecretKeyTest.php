@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\functions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function Facile\JoseVerifier\jose_secret_key;
 
 class JoseSecretKeyTest extends TestCase
 {
-    /**
-     * @dataProvider valuesProvider
-     */
+    #[DataProvider('valuesProvider')]
     public function testJoseSecretKey(string $secret, string $alg, string $expected): void
     {
         $jwk = jose_secret_key($secret, $alg);
