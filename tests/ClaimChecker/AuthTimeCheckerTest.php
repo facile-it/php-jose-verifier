@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Facile\JoseVerifier\Test\ClaimChecker;
 
+use Facile\JoseVerifier\Internal\InternalClock;
 use Facile\JoseVerifier\Internal\Checker\AuthTimeChecker;
 use Jose\Component\Checker\InvalidClaimException;
 use PHPUnit\Framework\TestCase;
@@ -18,13 +19,21 @@ class AuthTimeCheckerTest extends TestCase
         static::assertSame('auth_time', $checker->supportedClaim());
     }
 
-    public function testCheckClaim(): void
+    public function testCheckClaimWithoutClock(): void
     {
+        $this->expectNotToPerformAssertions();
         $checker = new AuthTimeChecker(1);
 
         $checker->checkClaim(time());
+    }
 
-        static::assertTrue(true);
+    public function testCheckClaim(): void
+    {
+        $this->expectNotToPerformAssertions();
+        $clock = new InternalClock(new \DateTimeImmutable('2026-01-08 17:00:00'));
+        $checker = new AuthTimeChecker(0, 0, $clock);
+
+        $checker->checkClaim($clock->now()->getTimestamp());
     }
 
     public function testCheckClaimTooOld(): void
@@ -32,16 +41,18 @@ class AuthTimeCheckerTest extends TestCase
         $this->expectException(InvalidClaimException::class);
         $this->expectExceptionMessageMatches('/Too much time has elapsed since the last End-User authentication/');
 
-        $checker = new AuthTimeChecker(1);
+        $clock = new InternalClock(new \DateTimeImmutable('2026-01-08 17:00:00'));
+        $checker = new AuthTimeChecker(0, 0, $clock);
 
-        $checker->checkClaim(time() - 2);
+        $checker->checkClaim($clock->now()->getTimestamp() - 1);
     }
 
     public function testCheckClaimTooOldButWithTolerance(): void
     {
-        $checker = new AuthTimeChecker(1, 2);
+        $clock = new InternalClock(new \DateTimeImmutable('2026-01-08 17:00:00'));
+        $checker = new AuthTimeChecker(1, 2, $clock);
 
-        $checker->checkClaim(time() - 2);
+        $checker->checkClaim($clock->now()->getTimestamp() - 2);
 
         static::assertTrue(true);
     }

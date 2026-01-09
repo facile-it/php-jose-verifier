@@ -26,7 +26,6 @@ abstract class AbstractVerifierBuilderTestCase extends TestCase
     {
         $reflectionClass = new ReflectionClass(get_class($instance));
         $property = $reflectionClass->getProperty($propertyName);
-        $property->setAccessible(true);
 
         return $property->getValue($instance);
     }
