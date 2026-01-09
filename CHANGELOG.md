@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Here we write upgrading notes for brands. It's a team effort to make them as
 straightforward as possible.
 
+## [0.5.1] - 2026-01-08
+
+### Fixed
+- Fixed jwt-library warning porting commits from v0.4.4
+- Add support for php 8.5
+
+
 ## [0.5.0] - 2026-01-02
 
 ### Added
