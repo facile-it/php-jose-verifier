@@ -136,7 +136,7 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
             ->withClaim(new IssuedAtChecker($this->clockTolerance, true, $this->clock))
             ->withClaim(new AudienceChecker($this->clientId, true))
             ->withClaim(new ExpirationTimeChecker($this->clockTolerance, false, $this->clock))
-            ->withClaim(new NotBeforeChecker($this->clockTolerance, true));
+            ->withClaim(new NotBeforeChecker($this->clockTolerance, true, $this->clock));
 
         if (null !== $this->expectedAzp) {
             $validator = $validator->withClaim(new AzpChecker($this->expectedAzp));
