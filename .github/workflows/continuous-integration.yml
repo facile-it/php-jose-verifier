@@ -31,7 +31,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
 
       - name: "Run psalm"
         run: "vendor/bin/psalm --long-progress --output-format=github --report=psalm.sarif --php-version=${{ matrix.php-version }}"
@@ -67,7 +67,7 @@ jobs:
           ini-values: "zend.assertions=1"
           extensions: "bcmath, gmp"
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
 
       - name: "Run PHPCS check"
         run: "composer cs-check"
@@ -102,7 +102,7 @@ jobs:
           ini-values: "zend.assertions=1"
           extensions: "bcmath, gmp"
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
         with:
           dependency-versions: ${{ matrix.deps }}
           composer-options: '--ignore-platform-req=php+'
