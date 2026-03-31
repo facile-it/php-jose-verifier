@@ -133,10 +133,10 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
         $validator = Validate::withToken($jwt)
             ->withJWKSet($this->buildJwks($jwt))
             ->withClaim(new IssuerChecker([$expectedIssuer], true))
-            ->withClaim(new IssuedAtChecker($this->clockTolerance, true, $this->clock))
+            ->withClaim(new IssuedAtChecker($this->clock, $this->clockTolerance, true))
             ->withClaim(new AudienceChecker($this->clientId, true))
-            ->withClaim(new ExpirationTimeChecker($this->clockTolerance, false, $this->clock))
-            ->withClaim(new NotBeforeChecker($this->clockTolerance, true, $this->clock));
+            ->withClaim(new ExpirationTimeChecker($this->clock, $this->clockTolerance, false))
+            ->withClaim(new NotBeforeChecker($this->clock, $this->clockTolerance, true));
 
         if (null !== $this->expectedAzp) {
             $validator = $validator->withClaim(new AzpChecker($this->expectedAzp));

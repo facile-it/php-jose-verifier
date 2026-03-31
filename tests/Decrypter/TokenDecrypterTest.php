@@ -49,9 +49,8 @@ class TokenDecrypterTest extends AbstractJwtTestCase
             new RSAOAEP(),
             new A128GCM(),
         ]);
-        $compressionMethodManager = new CompressionMethodManager();
         $jwsBuilder = new JWSBuilder($algorithmManager);
-        $jweBuilder = new JWEBuilder($algorithmManager, $algorithmManager, $compressionMethodManager);
+        $jweBuilder = new JWEBuilder($algorithmManager);
 
         $builder = new NestedTokenBuilder($jweBuilder, $jweSerializerManager, $jwsBuilder, $jwsSerializerManager);
 
@@ -107,9 +106,8 @@ class TokenDecrypterTest extends AbstractJwtTestCase
             new HS256(),
             new Dir(),
         ]);
-        $compressionMethodManager = new CompressionMethodManager();
         $jwsBuilder = new JWSBuilder($algorithmManager);
-        $jweBuilder = new JWEBuilder($algorithmManager, $algorithmManager, $compressionMethodManager);
+        $jweBuilder = new JWEBuilder($algorithmManager);
 
         $builder = new NestedTokenBuilder($jweBuilder, $jweSerializerManager, $jwsBuilder, $jwsSerializerManager);
 

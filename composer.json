@@ -32,7 +32,7 @@
         "access token"
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
         "nyholm/psr7": "^1.8",
         "psr/clock": "^1.0",
@@ -43,7 +43,7 @@
         "symfony/http-client": "^6.0 || ^7.0 || ^8.0",
         "symfony/polyfill-mbstring": "^1.15",
         "symfony/polyfill-php83": "^1.33",
-        "web-token/jwt-library": "^3.4"
+        "web-token/jwt-library": "^4.0"
     },
     "autoload": {
         "files": [

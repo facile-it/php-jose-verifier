@@ -130,7 +130,6 @@ final class TokenDecrypter implements TokenDecrypterInterface
             new JWESerializerManager([new CompactSerializer()]),
             new JWEDecrypter(
                 new AlgorithmManager($this->algorithms),
-                new AlgorithmManager($this->algorithms),
             ),
             $headerChecker,
         );
