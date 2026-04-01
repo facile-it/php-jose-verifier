@@ -24,8 +24,6 @@ use Throwable;
  */
 final class Validate
 {
-    private string $token;
-
     private JWKSet $jwkset;
 
     /** @var Checker\HeaderChecker[] */
@@ -40,16 +38,15 @@ final class Validate
     /** @var string[] */
     private array $mandatoryClaims = [];
 
-    private function __construct(string $token)
+    private function __construct(private string $token)
     {
-        $this->token = $token;
         $this->jwkset = new JWKSet([]);
 
         foreach ($this->getAlgorithmMap() as $algorithmClass) {
             if (class_exists($algorithmClass)) {
                 try {
                     $this->algorithms[] = new $algorithmClass();
-                } catch (Throwable $throwable) {
+                } catch (Throwable) {
                     // does nothing
                 }
             }
@@ -92,9 +89,7 @@ final class Validate
             throw new InvalidTokenException($e->getMessage(), 0, $e);
         } catch (Checker\InvalidClaimException $e) {
             throw new InvalidTokenClaimException($e->getMessage(), $e->getClaim(), $e->getValue(), $e);
-        } catch (Checker\MissingMandatoryHeaderParameterException $e) {
-            throw new InvalidTokenException($e->getMessage(), 0, $e);
-        } catch (Checker\MissingMandatoryClaimException $e) {
+        } catch (Checker\MissingMandatoryHeaderParameterException|Checker\MissingMandatoryClaimException $e) {
             throw new InvalidTokenException($e->getMessage(), 0, $e);
         } catch (Throwable $e) {
             throw new InvalidTokenException('An error occurred validating JWT', 0, $e);

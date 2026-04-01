@@ -96,9 +96,7 @@ class ValidateTest extends AbstractJwtTestCase
         $token = $this->generateTokenWithPayload($payload);
         $baseValidator = Validate::withToken($token)
             ->withJWKSet($this->jwks);
-        $validator = $baseValidator->withClaim(new CallableChecker('aud', static function () {
-            return true;
-        }));
+        $validator = $baseValidator->withClaim(new CallableChecker('aud', static fn() => true));
 
         $this->assertNotSame($validator, $baseValidator);
         $this->assertSame($payload, $validator->run());
@@ -112,9 +110,7 @@ class ValidateTest extends AbstractJwtTestCase
         $token = $this->generateTokenWithPayload($payload);
         $baseValidator = Validate::withToken($token)
             ->withJWKSet($this->jwks);
-        $validator = $baseValidator->withClaim(new CallableChecker('aud', static function () {
-            return false;
-        }));
+        $validator = $baseValidator->withClaim(new CallableChecker('aud', static fn() => false));
 
         $this->assertNotSame($validator, $baseValidator);
         $validator->run();

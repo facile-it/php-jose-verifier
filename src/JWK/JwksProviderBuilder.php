@@ -120,7 +120,7 @@ final class JwksProviderBuilder
             $provider = new CachedJwksProvider(
                 $provider,
                 $this->cache,
-                substr(sha1(__CLASS__ . $this->jwksUri), 0, 65),
+                substr(sha1(self::class . $this->jwksUri), 0, 65),
                 $this->cacheTtl,
             );
         }

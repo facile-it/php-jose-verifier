@@ -12,16 +12,11 @@ use function sprintf;
 /**
  * @internal
  */
-final class NonceChecker implements ClaimChecker
+final readonly class NonceChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'nonce';
 
-    private string $nonce;
-
-    public function __construct(string $nonce)
-    {
-        $this->nonce = $nonce;
-    }
+    public function __construct(private string $nonce) {}
 
     /**
      * @param mixed $value
