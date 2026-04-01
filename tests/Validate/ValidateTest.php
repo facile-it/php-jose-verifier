@@ -11,16 +11,15 @@ use Facile\JoseVerifier\Test\AbstractJwtTestCase;
 use Facile\JoseVerifier\Test\ClaimChecker\CallableChecker;
 use Jose\Component\Checker\AlgorithmChecker;
 use Jose\Component\Checker\InvalidHeaderException;
+use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\KeyManagement\JWKFactory;
 
 class ValidateTest extends AbstractJwtTestCase
 {
-    /** @var \Jose\Component\Core\JWK */
-    private $jwk;
+    private JWK $jwk;
 
-    /** @var JWKSet */
-    private $jwks;
+    private JWKSet $jwks;
 
     protected function setUp(): void
     {

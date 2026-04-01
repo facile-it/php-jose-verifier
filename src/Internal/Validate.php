@@ -79,7 +79,7 @@ final class Validate
             /** @var array<string, mixed> $claims */
             $claims = JsonConverter::decode($jws->getPayload() ?? '{}');
         } catch (JsonException $e) {
-            throw new InvalidTokenException('Unable to decode JWT payload');
+            throw new InvalidTokenException('Unable to decode JWT payload', $e->getCode(), $e);
         }
 
         $claimChecker = new Checker\ClaimCheckerManager($this->claimCheckers);

@@ -19,10 +19,7 @@ class JwksProviderBuilderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @return mixed
-     */
-    protected function getPropertyValue(object $instance, string $propertyName)
+    protected function getPropertyValue(object $instance, string $propertyName): mixed
     {
         $reflectionClass = new ReflectionClass($instance::class);
         $property = $reflectionClass->getProperty($propertyName);

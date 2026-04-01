@@ -99,11 +99,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
 
     protected function getJwksProvider(): JwksProviderInterface
     {
-        if ($this->jwksProvider) {
-            return $this->jwksProvider;
-        }
-
-        return $this->jwksProvider = $this->buildJwksProvider();
+        return $this->jwksProvider ??= $this->buildJwksProvider();
     }
 
     /**
@@ -124,11 +120,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
 
     protected function getClientJwksProvider(): JwksProviderInterface
     {
-        if ($this->clientJwksProvider) {
-            return $this->clientJwksProvider;
-        }
-
-        return $this->clientJwksProvider = $this->buildClientJwksProvider();
+        return $this->clientJwksProvider ??= $this->buildClientJwksProvider();
     }
 
     protected function buildClientJwksProvider(): JwksProviderInterface
