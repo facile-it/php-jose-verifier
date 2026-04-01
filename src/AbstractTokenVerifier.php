@@ -214,12 +214,12 @@ abstract class AbstractTokenVerifier implements TokenVerifierInterface
         $jwks = JWKSet::createFromKeyData($this->jwksProvider->getJwks());
         $jwk = $jwks->selectKey('sig', null, ['kid' => $kid]);
 
-        if (null === $jwk) {
+        if (! $jwk instanceof JWK) {
             $jwks = JWKSet::createFromKeyData($this->jwksProvider->reload()->getJwks());
             $jwk = $jwks->selectKey('sig', null, ['kid' => $kid]);
         }
 
-        if (null === $jwk) {
+        if (! $jwk instanceof JWK) {
             throw new InvalidTokenException('Unable to find the jwk with the provided kid: ' . $kid);
         }
 

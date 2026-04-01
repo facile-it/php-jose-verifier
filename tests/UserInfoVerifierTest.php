@@ -29,10 +29,10 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
         return new UserInfoVerifier(
             'https://issuer.com',
             'client-id',
-            authTimeRequired: $this->authTimeRequired,
-            expectedAlg: $this->expectedAlg,
-            expectedAzp: $this->expectedAzp,
             clientSecret: $this->clientSecret,
+            authTimeRequired: $this->authTimeRequired,
+            expectedAzp: $this->expectedAzp,
+            expectedAlg: $this->expectedAlg,
             jwksProvider: $this->jwksProvider ?? new MemoryJwksProvider($jwks),
             decrypter: $this->tokenDecrypter ?? new NullTokenDecrypter(),
         );

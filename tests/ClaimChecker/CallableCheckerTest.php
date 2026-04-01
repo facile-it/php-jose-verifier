@@ -13,19 +13,19 @@ class CallableCheckerTest extends TestCase
     public function testSupportedClaim(): void
     {
         $checker = new CallableChecker('foo', static fn(): true => true);
-        static::assertSame('foo', $checker->supportedClaim());
+        self::assertSame('foo', $checker->supportedClaim());
     }
 
     public function testSupportedHeader(): void
     {
         $checker = new CallableChecker('foo', static fn(): true => true);
-        static::assertSame('foo', $checker->supportedHeader());
+        self::assertSame('foo', $checker->supportedHeader());
     }
 
     public function testProtectedHeaderOnly(): void
     {
         $checker = new CallableChecker('foo', static fn(): true => true);
-        static::assertTrue($checker->protectedHeaderOnly());
+        self::assertTrue($checker->protectedHeaderOnly());
     }
 
     public function testCheckClaim(): void
@@ -33,7 +33,7 @@ class CallableCheckerTest extends TestCase
         $checker = new CallableChecker('foo', static fn($value): bool => $value === 'foo');
         $checker->checkClaim('foo');
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimFail(): void
@@ -49,7 +49,7 @@ class CallableCheckerTest extends TestCase
         $checker = new CallableChecker('foo', static fn($value): bool => $value === 'foo');
         $checker->checkHeader('foo');
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckHeaderFail(): void

@@ -30,9 +30,9 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
         return new IdTokenVerifier(
             'https://issuer.com',
             'client-id',
+            clientSecret: $this->clientSecret,
             authTimeRequired: $this->authTimeRequired,
             expectedAlg: $this->expectedAlg,
-            clientSecret: $this->clientSecret,
             jwksProvider: $this->jwksProvider ?? new MemoryJwksProvider($jwks),
             decrypter: $this->tokenDecrypter ?? new NullTokenDecrypter(),
         );

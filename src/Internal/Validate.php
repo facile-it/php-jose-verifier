@@ -55,7 +55,7 @@ final class Validate
 
     public static function withToken(string $token): static
     {
-        return new static($token);
+        return new self($token);
     }
 
     /**

@@ -24,28 +24,28 @@ abstract class AbstractHashCheckerTestCase extends TestCase
 
     public function testSupportedClaim(): void
     {
-        static::assertSame($this->getSupportedClaim(), $this->getChecker('RS256')->supportedClaim());
+        self::assertSame($this->getSupportedClaim(), $this->getChecker('RS256')->supportedClaim());
     }
 
     public function testCheckClaimWith512(): void
     {
         $this->getChecker('RS512')->checkClaim(static::FOO_HASH_512);
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimWith384(): void
     {
         $this->getChecker('RS384')->checkClaim(static::FOO_HASH_384);
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimWith256(): void
     {
         $this->getChecker('RS256')->checkClaim(static::FOO_HASH_256);
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimWithWrongValue(): void
@@ -54,6 +54,6 @@ abstract class AbstractHashCheckerTestCase extends TestCase
         $this->expectExceptionMessageMatches(sprintf('/%s mismatch/', $this->getSupportedClaim()));
         $this->getChecker('RS256')->checkClaim('bar');
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 }

@@ -13,7 +13,7 @@ class AzpCheckerTest extends TestCase
     public function testSupportedClaim(): void
     {
         $checker = new AzpChecker('foo');
-        static::assertSame('azp', $checker->supportedClaim());
+        self::assertSame('azp', $checker->supportedClaim());
     }
 
     public function testCheckClaim(): void
@@ -21,7 +21,7 @@ class AzpCheckerTest extends TestCase
         $checker = new AzpChecker('foo');
         $checker->checkClaim('foo');
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimFail(): void

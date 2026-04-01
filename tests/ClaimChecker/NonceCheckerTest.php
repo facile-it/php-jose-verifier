@@ -13,7 +13,7 @@ class NonceCheckerTest extends TestCase
     public function testSupportedClaim(): void
     {
         $checker = new NonceChecker('foo');
-        static::assertSame('nonce', $checker->supportedClaim());
+        self::assertSame('nonce', $checker->supportedClaim());
     }
 
     public function testCheckClaim(): void
@@ -21,7 +21,7 @@ class NonceCheckerTest extends TestCase
         $checker = new NonceChecker('foo');
         $checker->checkClaim('foo');
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimFail(): void

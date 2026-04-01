@@ -47,19 +47,6 @@ class ValidateTest extends AbstractJwtTestCase
         ], $this->jwk);
     }
 
-    private function generateToken(): string
-    {
-        return $this->generateTokenWithPayload([
-            'iss' => 'https://issuer.com',
-            'sub' => 'client-id',
-            'aud' => 'client-id',
-            'azp' => 'client-id',
-            'exp' => time() + 600,
-            'iat' => time(),
-            'auth_time' => time() - 100,
-        ]);
-    }
-
     public function testShouldValidateSignature(): void
     {
         $payload = $this->createPayload();
