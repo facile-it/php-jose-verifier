@@ -44,7 +44,7 @@ jobs:
           sarif_file: psalm.sarif
 
   codestyle:
-    name: "Code Style"
+    name: "Rector + Code Style"
     runs-on: ubuntu-latest
 
     strategy:
@@ -71,7 +71,7 @@ jobs:
       - uses: ramsey/composer-install@v4
 
       - name: "Run PHPCS check"
-        run: "composer cs-check"
+        run: "composer rector-check && composer cs-check"
 
   phpunit:
     name: "PHPUnit"
