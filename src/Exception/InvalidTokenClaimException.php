@@ -18,7 +18,7 @@ class InvalidTokenClaimException extends RuntimeException implements InvalidToke
         string $message,
         private readonly string $claim,
         private $value,
-        ?Throwable $previous = null
+        ?Throwable $previous = null,
     ) {
         parent::__construct($message, 0, $previous);
     }

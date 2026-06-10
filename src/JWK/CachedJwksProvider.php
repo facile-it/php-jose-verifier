@@ -23,7 +23,7 @@ final class CachedJwksProvider extends AbstractJwksProvider
         private readonly JwksProviderInterface $provider,
         private readonly CacheInterface $cache,
         private readonly string $cacheKey,
-        private readonly ?int $ttl
+        private readonly ?int $ttl,
     ) {}
 
     /**

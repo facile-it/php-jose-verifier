@@ -49,7 +49,7 @@ abstract class AbstractTokenVerifierBuilder implements TokenVerifierBuilderInter
      */
     protected function __construct(
         protected array $issuerMetadata,
-        protected array $clientMetadata
+        protected array $clientMetadata,
     ) {}
 
     public function withClockTolerance(int $clockTolerance): static

@@ -23,7 +23,7 @@ final class CallableChecker implements ClaimChecker, HeaderChecker
      */
     public function __construct(
         private readonly string $key,
-        callable $callable
+        callable $callable,
     ) {
         $this->callable = $callable;
     }

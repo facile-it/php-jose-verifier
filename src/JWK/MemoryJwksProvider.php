@@ -11,7 +11,7 @@ final readonly class MemoryJwksProvider implements JwksProviderInterface
      */
     public function __construct(
         /** @psalm-var array{keys: list<array<string, mixed>>} */
-        private array $jwks = ['keys' => []]
+        private array $jwks = ['keys' => []],
     ) {}
 
     public function getJwks(): array

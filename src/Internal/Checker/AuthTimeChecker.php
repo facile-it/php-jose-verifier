@@ -21,7 +21,7 @@ final readonly class AuthTimeChecker implements ClaimChecker
     public function __construct(
         private int $maxAge,
         private int $allowedTimeDrift = 0,
-        private ClockInterface $clock = new InternalClock()
+        private ClockInterface $clock = new InternalClock(),
     ) {}
 
     /**

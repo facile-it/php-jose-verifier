@@ -12,7 +12,9 @@ use Psr\Clock\ClockInterface;
  */
 final readonly class InternalClock implements ClockInterface
 {
-    public function __construct(private ?DateTimeImmutable $now = null) {}
+    public function __construct(
+        private ?DateTimeImmutable $now = null,
+    ) {}
 
     public function now(): DateTimeImmutable
     {

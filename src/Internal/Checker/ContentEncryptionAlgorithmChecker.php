@@ -22,7 +22,7 @@ final readonly class ContentEncryptionAlgorithmChecker implements HeaderChecker
      */
     public function __construct(
         private array $supportedAlgorithms,
-        private bool $protectedHeader = false
+        private bool $protectedHeader = false,
     ) {}
 
     /**

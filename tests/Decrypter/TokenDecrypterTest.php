@@ -175,7 +175,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
             (string) $nestedTokenLoader->load(
                 $token,
                 JWKSet::createFromKeyData($encJwks),
-                JWKSet::createFromKeyData($sigJwks)
+                JWKSet::createFromKeyData($sigJwks),
             )
                 ->getPayload(),
             true,

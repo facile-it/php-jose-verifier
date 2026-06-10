@@ -16,7 +16,9 @@ final readonly class NonceChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'nonce';
 
-    public function __construct(private string $nonce) {}
+    public function __construct(
+        private string $nonce,
+    ) {}
 
     /**
      * @param mixed $value

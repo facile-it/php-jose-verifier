@@ -16,7 +16,9 @@ final readonly class AzpChecker implements ClaimChecker
 {
     private const CLAIM_NAME = 'azp';
 
-    public function __construct(private string $azp) {}
+    public function __construct(
+        private string $azp,
+    ) {}
 
     /**
      * @param mixed $value

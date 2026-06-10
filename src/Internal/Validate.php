@@ -38,8 +38,9 @@ final class Validate
     /** @var string[] */
     private array $mandatoryClaims = [];
 
-    private function __construct(private string $token)
-    {
+    private function __construct(
+        private string $token,
+    ) {
         $this->jwkset = new JWKSet([]);
 
         foreach ($this->getAlgorithmMap() as $algorithmClass) {

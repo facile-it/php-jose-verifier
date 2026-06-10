@@ -21,7 +21,7 @@ abstract class AbstractHashChecker implements ClaimChecker
 {
     public function __construct(
         private readonly string $valueToCheck,
-        private readonly string $alg
+        private readonly string $alg,
     ) {}
 
     private function getShaSize(string $alg): string
