@@ -77,7 +77,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
             [[
                 'key' => $encKey,
             ]],
-            'jwe_compact'
+            'jwe_compact',
         );
 
         $tokenDecrypter = (new \Facile\JoseVerifier\Decrypter\TokenDecrypter())
@@ -132,7 +132,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
             [[
                 'key' => $encKey,
             ]],
-            'jwe_compact'
+            'jwe_compact',
         );
 
         $tokenDecrypter = (new TokenDecrypter())
@@ -167,7 +167,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
         $jweLoader = new JWELoader(
             $jweSerializerManager,
             $jweDecrypter,
-            null
+            null,
         );
         $jwsVerifier = new JWSVerifier($algorithmManager);
         $jwsLoader = new JWSLoader($jwsSerializerManager, $jwsVerifier, null);
@@ -177,7 +177,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
             $nestedTokenLoader->load($token, JWKSet::createFromKeyData($encJwks), JWKSet::createFromKeyData($sigJwks))
                 ->getPayload(),
             true,
-            JSON_THROW_ON_ERROR
+            JSON_THROW_ON_ERROR,
         );
     }
 }

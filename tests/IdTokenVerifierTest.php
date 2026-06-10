@@ -67,7 +67,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             authTimeRequired: true,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier->withNonce('nonce')
@@ -102,7 +102,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             aadIssValidation: true,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier->verify($token);
@@ -132,7 +132,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'https://issuer.com',
             'client-id',
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier->withMaxAge(1)
@@ -165,7 +165,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'https://issuer.com',
             'client-id',
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $verifier->withMaxAge(1)
@@ -195,7 +195,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             clockTolerance: 60,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier->withMaxAge(1)
@@ -230,7 +230,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             authTimeRequired: true,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $verifier->withNonce('nonce')
@@ -263,7 +263,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             authTimeRequired: true,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier->withNonce('nonce')
@@ -299,7 +299,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             authTimeRequired: true,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier->withNonce('nonce')
@@ -335,7 +335,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'client-id',
             authTimeRequired: true,
             expectedAlg: 'RS256',
-            jwksProvider: new MemoryJwksProvider($jwks)
+            jwksProvider: new MemoryJwksProvider($jwks),
         );
 
         $result = $verifier
@@ -516,7 +516,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             clientSecret: $clientSecret,
             authTimeRequired: true,
             expectedAlg: 'HS256',
-            jwksProvider: new MemoryJwksProvider()
+            jwksProvider: new MemoryJwksProvider(),
         );
 
         $result = $verifier
@@ -552,7 +552,7 @@ class IdTokenVerifierTest extends AbstractTokenVerifierTestCase
             'https://issuer.com',
             'client-id',
             expectedAlg: 'HS256',
-            jwksProvider: new MemoryJwksProvider()
+            jwksProvider: new MemoryJwksProvider(),
         );
 
         $verifier->verify($token);

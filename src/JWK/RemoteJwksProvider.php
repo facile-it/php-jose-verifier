@@ -36,7 +36,7 @@ final class RemoteJwksProvider extends AbstractJwksProvider
         ClientInterface $client,
         RequestFactoryInterface $requestFactory,
         string $uri,
-        array $headers = []
+        array $headers = [],
     ) {
         $this->client = $client;
         $this->requestFactory = $requestFactory;

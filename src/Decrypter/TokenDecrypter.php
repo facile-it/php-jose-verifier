@@ -130,16 +130,16 @@ final class TokenDecrypter implements TokenDecrypterInterface
             new JWESerializerManager([new CompactSerializer()]),
             new JWEDecrypter(
                 new AlgorithmManager($this->algorithms),
-                new AlgorithmManager($this->algorithms)
+                new AlgorithmManager($this->algorithms),
             ),
-            $headerChecker
+            $headerChecker,
         );
 
         try {
             return $jweLoader->loadAndDecryptWithKeySet(
                 $jwt,
                 $this->buildJwks($jwt),
-                $recipient
+                $recipient,
             )->getPayload();
         } catch (Throwable $e) {
             throw new InvalidTokenException('Unable to decrypt JWE', 0, $e);

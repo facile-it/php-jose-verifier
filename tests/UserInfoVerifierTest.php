@@ -120,8 +120,7 @@ class UserInfoVerifierTest extends AbstractTokenVerifierTestCase
                 false,
             ],
             'missing sub' => [
-                [
-                ],
+                [],
                 false,
             ],
         ];
