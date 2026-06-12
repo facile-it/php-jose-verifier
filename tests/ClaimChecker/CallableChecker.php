@@ -11,9 +11,6 @@ use Jose\Component\Checker\InvalidHeaderException;
 
 final class CallableChecker implements ClaimChecker, HeaderChecker
 {
-    /** @var string */
-    private $key;
-
     /**
      * @var callable
      *
@@ -24,9 +21,10 @@ final class CallableChecker implements ClaimChecker, HeaderChecker
     /**
      * @psalm-param callable(mixed): bool $callable
      */
-    public function __construct(string $key, callable $callable)
-    {
-        $this->key = $key;
+    public function __construct(
+        private readonly string $key,
+        callable $callable,
+    ) {
         $this->callable = $callable;
     }
 

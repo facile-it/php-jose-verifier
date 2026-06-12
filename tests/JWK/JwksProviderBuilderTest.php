@@ -15,18 +15,13 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
 
-use function get_class;
-
 class JwksProviderBuilderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @return mixed
-     */
-    protected function getPropertyValue(object $instance, string $propertyName)
+    protected function getPropertyValue(object $instance, string $propertyName): mixed
     {
-        $reflectionClass = new ReflectionClass(get_class($instance));
+        $reflectionClass = new ReflectionClass($instance::class);
         $property = $reflectionClass->getProperty($propertyName);
 
         return $property->getValue($instance);

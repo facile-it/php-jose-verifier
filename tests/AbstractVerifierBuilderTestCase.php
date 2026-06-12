@@ -11,8 +11,6 @@ use Facile\JoseVerifier\JWK\RemoteJwksProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-use function get_class;
-
 abstract class AbstractVerifierBuilderTestCase extends TestCase
 {
     abstract protected function getBuilder(array $issuerMetadata, array $clientMetadata): AbstractTokenVerifierBuilder;
@@ -24,7 +22,7 @@ abstract class AbstractVerifierBuilderTestCase extends TestCase
      */
     protected function getPropertyValue(object $instance, string $propertyName)
     {
-        $reflectionClass = new ReflectionClass(get_class($instance));
+        $reflectionClass = new ReflectionClass($instance::class);
         $property = $reflectionClass->getProperty($propertyName);
 
         return $property->getValue($instance);

@@ -79,7 +79,7 @@ final class TokenDecrypter implements TokenDecrypterInterface
             if (class_exists($algorithmClass)) {
                 try {
                     $this->algorithms[] = new $algorithmClass();
-                } catch (Throwable $throwable) {
+                } catch (Throwable) {
                     // does nothing
                 }
             }
@@ -158,7 +158,7 @@ final class TokenDecrypter implements TokenDecrypterInterface
             KeyEncryption\A128GCMKW::class,
             KeyEncryption\A192GCMKW::class,
             KeyEncryption\A256GCMKW::class,
-            ...(class_exists('AESKW\Wrapper') ? [
+            ...(class_exists(\AESKW\Wrapper::class) ? [
                 KeyEncryption\A128KW::class,
                 KeyEncryption\A192KW::class,
                 KeyEncryption\A256KW::class,

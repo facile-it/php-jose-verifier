@@ -16,7 +16,7 @@ class AuthTimeCheckerTest extends TestCase
     public function testSupportedClaim(): void
     {
         $checker = new AuthTimeChecker(1);
-        static::assertSame('auth_time', $checker->supportedClaim());
+        self::assertSame('auth_time', $checker->supportedClaim());
     }
 
     public function testCheckClaimWithoutClock(): void
@@ -54,7 +54,7 @@ class AuthTimeCheckerTest extends TestCase
 
         $checker->checkClaim($clock->now()->getTimestamp() - 2);
 
-        static::assertTrue(true);
+        self::assertTrue(true);
     }
 
     public function testCheckClaimWithNotIntValue(): void

@@ -87,7 +87,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
         $serializer = new JWSSerializer();
         $result = $serializer->unserialize($tokenDecrypter->decrypt($token))->getPayload();
 
-        $this->assertSame($payload, json_decode($result, true));
+        $this->assertSame($payload, json_decode((string) $result, true));
     }
 
     public function testCreateWithSymNestedToken(): void
@@ -141,7 +141,7 @@ class TokenDecrypterTest extends AbstractJwtTestCase
         $serializer = new JWSSerializer();
         $result = $serializer->unserialize($tokenDecrypter->decrypt($token))->getPayload();
 
-        $this->assertSame($payload, json_decode($result, true));
+        $this->assertSame($payload, json_decode((string) $result, true));
     }
 
     protected function jwksToArray(JWKSet $jwks): array
@@ -172,7 +172,11 @@ class TokenDecrypterTest extends AbstractJwtTestCase
         $nestedTokenLoader = new NestedTokenLoader($jweLoader, $jwsLoader);
 
         return json_decode(
-            $nestedTokenLoader->load($token, JWKSet::createFromKeyData($encJwks), JWKSet::createFromKeyData($sigJwks))
+            (string) $nestedTokenLoader->load(
+                $token,
+                JWKSet::createFromKeyData($encJwks),
+                JWKSet::createFromKeyData($sigJwks),
+            )
                 ->getPayload(),
             true,
             JSON_THROW_ON_ERROR,

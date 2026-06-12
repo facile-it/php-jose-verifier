@@ -11,16 +11,15 @@ use Facile\JoseVerifier\Test\AbstractJwtTestCase;
 use Facile\JoseVerifier\Test\ClaimChecker\CallableChecker;
 use Jose\Component\Checker\AlgorithmChecker;
 use Jose\Component\Checker\InvalidHeaderException;
+use Jose\Component\Core\JWK;
 use Jose\Component\Core\JWKSet;
 use Jose\Component\KeyManagement\JWKFactory;
 
 class ValidateTest extends AbstractJwtTestCase
 {
-    /** @var \Jose\Component\Core\JWK */
-    private $jwk;
+    private JWK $jwk;
 
-    /** @var JWKSet */
-    private $jwks;
+    private JWKSet $jwks;
 
     protected function setUp(): void
     {
@@ -46,19 +45,6 @@ class ValidateTest extends AbstractJwtTestCase
         return $this->createSignedToken($payload, [
             'alg' => 'RS256',
         ], $this->jwk);
-    }
-
-    private function generateToken(): string
-    {
-        return $this->generateTokenWithPayload([
-            'iss' => 'https://issuer.com',
-            'sub' => 'client-id',
-            'aud' => 'client-id',
-            'azp' => 'client-id',
-            'exp' => time() + 600,
-            'iat' => time(),
-            'auth_time' => time() - 100,
-        ]);
     }
 
     public function testShouldValidateSignature(): void
@@ -96,9 +82,7 @@ class ValidateTest extends AbstractJwtTestCase
         $token = $this->generateTokenWithPayload($payload);
         $baseValidator = Validate::withToken($token)
             ->withJWKSet($this->jwks);
-        $validator = $baseValidator->withClaim(new CallableChecker('aud', static function () {
-            return true;
-        }));
+        $validator = $baseValidator->withClaim(new CallableChecker('aud', static fn(): true => true));
 
         $this->assertNotSame($validator, $baseValidator);
         $this->assertSame($payload, $validator->run());
@@ -112,9 +96,7 @@ class ValidateTest extends AbstractJwtTestCase
         $token = $this->generateTokenWithPayload($payload);
         $baseValidator = Validate::withToken($token)
             ->withJWKSet($this->jwks);
-        $validator = $baseValidator->withClaim(new CallableChecker('aud', static function () {
-            return false;
-        }));
+        $validator = $baseValidator->withClaim(new CallableChecker('aud', static fn(): false => false));
 
         $this->assertNotSame($validator, $baseValidator);
         $validator->run();
