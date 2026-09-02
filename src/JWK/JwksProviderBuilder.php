@@ -117,7 +117,7 @@ final class JwksProviderBuilder
         );
 
         if ($this->cache instanceof CacheInterface) {
-            $provider = new CachedJwksProvider(
+            return new CachedJwksProvider(
                 $provider,
                 $this->cache,
                 substr(sha1(self::class . $this->jwksUri), 0, 65),
