@@ -8,6 +8,7 @@ use Facile\JoseVerifier\JWK\CachedJwksProvider;
 use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\JoseVerifier\JWK\MemoryJwksProvider;
 use Facile\JoseVerifier\JWK\RemoteJwksProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientInterface;
@@ -97,9 +98,7 @@ class JwksProviderBuilderTest extends TestCase
         $this->assertSame('https://jwks_uri', $this->getPropertyValue($remoteProvider, 'uri'));
     }
 
-    /**
-     * @depends testShouldCreateRemoteProviderWithCache
-     */
+    #[Depends('testShouldCreateRemoteProviderWithCache')]
     public function testShouldCreateRemoteProviderWithCacheTtl(): void
     {
         $cache = $this->prophesize(CacheInterface::class);

@@ -95,13 +95,12 @@ final class TokenDecrypter implements TokenDecrypterInterface
         $enc = $header['enc'] ?? '';
 
         if (preg_match('/^(?:RSA|ECDH)/', $alg)) {
-            $jwks = JWKSet::createFromKeyData($this->jwksProvider->getJwks());
-        } else {
-            $jwk = jose_secret_key($this->clientSecret ?? '', $alg === 'dir' ? $enc : $alg);
-            $jwks = new JWKSet([$jwk]);
+            return JWKSet::createFromKeyData($this->jwksProvider->getJwks());
         }
 
-        return $jwks;
+        $jwk = jose_secret_key($this->clientSecret ?? '', $alg === 'dir' ? $enc : $alg);
+
+        return new JWKSet([$jwk]);
     }
 
     /**
